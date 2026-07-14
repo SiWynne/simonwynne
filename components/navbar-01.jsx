@@ -1,9 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
+
+const NAV_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/meet-the-team", label: "Meet the Team" },
+  { href: "/how-i-work", label: "How I Work" },
+  { href: "/services", label: "Services" },
+  { href: "/blog", label: "Blog" },
+];
+
+const normalizePath = (path) => (path === "/" ? path : path.replace(/\/$/, ""));
 
 const useRelume = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -23,6 +35,8 @@ const useRelume = () => {
 
 export function Navbar1() {
   const useActive = useRelume();
+  const pathname = usePathname();
+  const isActivePath = (href) => normalizePath(pathname) === normalizePath(href);
   return (
     <section className="z-[999] flex w-full items-center bg-scheme-background lg:min-h-18 lg:px-[5%] scheme-1 btn-light badge-alt">
       <div className="size-full lg:flex lg:items-center lg:justify-between">
@@ -88,41 +102,19 @@ export function Navbar1() {
           transition={{ duration: 0.4 }}
           className="overflow-hidden px-[5%] lg:flex lg:items-center lg:overflow-visible lg:px-0 lg:[--height-closed:auto] lg:[--height-open:auto]"
         >
-          <Link
-            href="/"
-            onClick={useActive.closeMobileMenu}
-            className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
-          >
-            Home
-          </Link>
-          <Link
-            href="/meet-the-team"
-            onClick={useActive.closeMobileMenu}
-            className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
-          >
-            Meet the Team
-          </Link>
-          <Link
-            href="/how-i-work"
-            onClick={useActive.closeMobileMenu}
-            className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
-          >
-            How I Work
-          </Link>
-          <Link
-            href="/services"
-            onClick={useActive.closeMobileMenu}
-            className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
-          >
-            Services
-          </Link>
-          <Link
-            href="/blog"
-            onClick={useActive.closeMobileMenu}
-            className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
-          >
-            Blog
-          </Link>
+          {NAV_LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={useActive.closeMobileMenu}
+              className={cn(
+                "block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2",
+                isActivePath(href) && "lg:bg-milan",
+              )}
+            >
+              {label}
+            </Link>
+          ))}
           <div className="mt-6 flex flex-col items-center gap-4 lg:mt-0 lg:ml-4 lg:flex-row">
             <Button
               asChild
