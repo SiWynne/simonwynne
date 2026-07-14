@@ -66,6 +66,13 @@
   font-display: swap;
 }
 @font-face {
+  font-family: "Cal Sans";
+  src: url("/fonts/cal-sans-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
   font-family: "JetBrains Mono";
   src: url("/fonts/jetbrains-mono-100.woff2") format("woff2");
   font-weight: 100;
@@ -198,6 +205,12 @@
   --color-fiord-dark: #2f4356;
   --color-fiord-darker: #17212b;
   --color-fiord-darkest: #111920;
+
+  --color-scheme-background: var(--color-neutral-lightest);
+  --color-scheme-foreground: var(--color-neutral-lightest);
+  --color-scheme-text: var(--color-neutral-darkest);
+  --color-scheme-border: var(--color-neutral-darkest);
+  --color-scheme-btn-text: var(--color-neutral-darkest);
 
   --font-weight-bold: 700;
 
@@ -428,10 +441,6 @@
 
   background-color: var(--color-scheme-background);
   color: var(--color-scheme-text);
-
-  & [data-slot="button"][data-variant="default"] {
-    color: var(--color-scheme-btn-text);
-  }
 }
 
 @utility scheme-3 {
@@ -443,10 +452,6 @@
 
   background-color: var(--color-scheme-background);
   color: var(--color-scheme-text);
-
-  & [data-slot="button"][data-variant="default"] {
-    color: var(--color-scheme-btn-text);
-  }
 }
 
 @utility scheme-4 {
@@ -493,6 +498,10 @@ body {
   }
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@utility font-cal-sans {
+  font-family: "Cal Sans", "DM Sans", sans-serif;
 }
 
 @utility logo-alt {

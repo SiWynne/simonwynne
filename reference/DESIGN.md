@@ -34,6 +34,11 @@ typography:
   heading:
     fontFamily: "DM Sans"
     fontWeight: 700
+  display:
+    fontFamily: "Cal Sans"
+    fontWeight: 700
+    fallback: "DM Sans, sans-serif"
+    usage: "Homepage hero h1 only ('Simon Wynne'), via the font-cal-sans utility"
   body:
     fontFamily: "JetBrains Mono"
     fontWeight: 400
@@ -79,42 +84,24 @@ cards:
 
 schemes:
   - name: "Scheme 1"
-    background: "neutral-shade-0"
-    backgroundHex: "#FFFFFF"
-    foregroundHex: "#FFFFFF"
-    textHex: "#000000"
-    accentHex: "#000000"
-    borderValue: "#000000"
-    useLogoVariant: light
-    cssClass: "scheme-1"
-  - name: "Scheme 2"
     background: "neutral-shade-1"
     backgroundHex: "#F2F2F2"
     foregroundHex: "#F2F2F2"
     textHex: "#000000"
-    accentHex: "#000000"
+    accentHex: "#FFF9AA"
     borderValue: "#000000"
     useLogoVariant: light
-    cssClass: "scheme-2"
-  - name: "Scheme 3"
-    background: "neutral-shade-6"
-    backgroundHex: "#191919"
-    foregroundHex: "#191919"
-    textHex: "#ffffff"
-    accentHex: "#FFF9AA"
-    borderValue: "#ffffff"
-    useLogoVariant: dark
-    cssClass: "scheme-3"
-  - name: "Scheme 4"
-    background: "chromatic2-shade-3"
+    cssClass: "scheme-1"
+  - name: "Scheme 2"
+    background: "fiord-light"
     backgroundHex: "#758798"
     foregroundHex: "#758798"
     textHex: "#ffffff"
     accentHex: "#FFF9AA"
     borderValue: "#ffffff"
     useLogoVariant: dark
-    cssClass: "scheme-4"
-  - name: "Scheme 5"
+    cssClass: "scheme-2"
+  - name: "Scheme 3"
     background: "neutral-shade-5"
     backgroundHex: "#4C4C4C"
     foregroundHex: "#4C4C4C"
@@ -122,16 +109,16 @@ schemes:
     accentHex: "#FFF9AA"
     borderValue: "#ffffff"
     useLogoVariant: dark
-    cssClass: "scheme-5"
-  - name: "Scheme 6"
-    background: "neutral-shade-4"
-    backgroundHex: "#7F7F7F"
-    foregroundHex: "#7F7F7F"
-    textHex: "#ffffff"
+    cssClass: "scheme-3"
+  - name: "Scheme 4"
+    background: "neutral-shade-0"
+    backgroundHex: "#FFFFFF"
+    foregroundHex: "#FFFFFF"
+    textHex: "#000000"
     accentHex: "#FFF9AA"
-    borderValue: "#ffffff"
-    useLogoVariant: dark
-    cssClass: "scheme-6"
+    borderValue: "#000000"
+    useLogoVariant: light
+    cssClass: "scheme-4"
 ---
 
 # SimonWynne — Design Specification
@@ -152,24 +139,32 @@ Use the CSS custom properties from `react/globals.css` for all colors (e.g. `--c
 
 Headings use **DM Sans** at weight 700. Body text uses **JetBrains Mono** at weight 400.
 
+The homepage hero headline ("Simon Wynne") is the one exception: it uses **Cal Sans** at weight 700 (via the `font-cal-sans` utility, falling back to DM Sans/sans-serif), set tighter (`leading-[0.85]` on mobile, `leading-[1.1]` on desktop) and left-aligned. This is a one-off display treatment for the name, not a sitewide heading change — every other heading stays on DM Sans.
+
 The type scale has desktop and mobile sizes. Apply mobile sizes at smaller breakpoints. All values are in `react/globals.css`.
 
 ## UI Elements
 
 UI style is **brick** with button radius 0px. Cards use the **edgy** style with border-width 2px.
 
+### Button label contrast
+
+The primary/default button always fills solid with **Milan shade-4 (`#FFF9AA`)** and hover-lightens to Milan shade-3 (`#FFFAC3`), with **neutral-darkest (`#000000`)** label text — regardless of which color scheme the surrounding section uses (light or dark background). Do not let a scheme's text color (e.g. white on Scheme 3/4) override the button label; white-on-yellow fails contrast. Secondary buttons keep scheme-appropriate dark text on a light/neutral fill.
+
 ## Color Schemes
 
-Sections use color schemes to control their visual appearance. Each scheme is derived from a single background color — all other colors (text, foreground, accent, border) are automatically computed for optimal contrast.
+Sections use color schemes to control their visual appearance. Each scheme is derived from a single background color — text, foreground, and border are set for contrast against it. The site implements **4 schemes** (`react/globals.css`, `@utility scheme-1`–`scheme-4`); there is no scheme-5 or scheme-6 in the codebase.
 
-| Scheme | Background | Text | Accent | Logo | CSS class |
+| Scheme | Background | Text/Border | Accent (button fill) | Logo | CSS class |
 |--------|-----------|------|--------|------|-----------|
-| Scheme 1 | Neutral White (#FFFFFF) | #000000 | #000000 | light | `.scheme-1` |
-| Scheme 2 | Neutral Lightest (#F2F2F2) | #000000 | #000000 | light | `.scheme-2` |
-| Scheme 3 | Neutral Darker (#191919) | #ffffff | #FFF9AA | dark | `.scheme-3` |
-| Scheme 4 | Fiord Light (#758798) | #ffffff | #FFF9AA | dark | `.scheme-4` |
-| Scheme 5 | Neutral Dark (#4C4C4C) | #ffffff | #FFF9AA | dark | `.scheme-5` |
-| Scheme 6 | Neutral (#7F7F7F) | #ffffff | #FFF9AA | dark | `.scheme-6` |
+| Scheme 1 | Neutral Lightest (#F2F2F2) | #000000 | #FFF9AA | standard (no invert) | `.scheme-1` |
+| Scheme 2 | Fiord Light (#758798) | #ffffff | #FFF9AA | inverted to white (`logo-alt`) | `.scheme-2` |
+| Scheme 3 | Neutral Dark (#4C4C4C) | #ffffff | #FFF9AA | inverted to white (`logo-alt`) | `.scheme-3` |
+| Scheme 4 | Neutral White (#FFFFFF) | #000000 | #FFF9AA | standard (no invert) | `.scheme-4` |
+
+The button accent is uniform across all 4 schemes: every default/primary button fills with Milan shade-4 (`#FFF9AA`) and uses black label text, regardless of the section's scheme (see [Button label contrast](#button-label-contrast) above). Scheme only controls the section's own background/text/border — not the button.
+
+There's no separate "dark" logo file. Light schemes (1, 4) render the logo as-authored (`/logo/simonwynne-logo-black.svg`); dark schemes (2, 3) apply the `logo-alt` utility class, which CSS-inverts it to white (`filter: brightness(0) invert(1)`) rather than swapping assets.
 
 Apply a scheme by adding its CSS class to the section element. See `sitemap.md` for which scheme each section uses.
 
@@ -178,6 +173,6 @@ Apply a scheme by adding its CSS class to the section element. See `sitemap.md` 
 To create visual variation, you can change which scheme a section uses. When switching schemes:
 
 - Swap the CSS class (e.g. change `.scheme-1` to `.scheme-2`)
-- All child elements automatically inherit the correct text, accent, and border colors
-- Use the matching logo variant (`logo-light.png` or `logo-light.png`) based on the scheme's `useLogoVariant`
+- All child elements automatically inherit the correct text and border colors; button accent color is unaffected (always Milan/black label, see above)
+- Add or remove the `logo-alt` class on the section to match the scheme's `useLogoVariant` (`dark` → add `logo-alt` to invert the logo to white; `light` → omit it)
 - Alternate between light and dark schemes to create visual rhythm

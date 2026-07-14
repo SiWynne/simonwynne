@@ -1,66 +1,39 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { AnimatePresence, motion } from "motion/react";
-import React, { useState } from "react";
-import { KeyboardArrowDown } from "relume-icons";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { useState } from "react";
 
 const useRelume = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 991px)", { initializeWithValue: false });
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
-  const openOnMobileDropdownMenu = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
-  const openOnDesktopDropdownMenu = () => {
-    !isMobile && setIsDropdownOpen(true);
-  };
-  const closeOnDesktopDropdownMenu = () => {
-    !isMobile && setIsDropdownOpen(false);
-  };
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
   const animateMobileMenu = isMobileMenuOpen ? "open" : "close";
   const animateMobileMenuButtonSpan = isMobileMenuOpen
     ? ["open", "rotatePhase"]
     : "closed";
-  const animateDropdownMenu = isDropdownOpen ? "open" : "close";
-  const animateDropdownMenuIcon = isDropdownOpen ? "rotated" : "initial";
   return {
     toggleMobileMenu,
-    openOnDesktopDropdownMenu,
-    closeOnDesktopDropdownMenu,
-    openOnMobileDropdownMenu,
+    closeMobileMenu,
     animateMobileMenu,
     animateMobileMenuButtonSpan,
-    animateDropdownMenu,
-    animateDropdownMenuIcon,
   };
-};
-
-const ConditionalCard = () => {
-  const Component = ({ children, ...props }) => {
-    const isMobile = useMediaQuery("(max-width: 991px)", { initializeWithValue: false });
-    const MotionCard = isMobile ? motion.nav : motion.create(Card);
-    return React.createElement(MotionCard, props, children);
-  };
-  return Component;
 };
 
 export function Navbar1() {
-  const ConditionalRenderedCard = ConditionalCard();
   const useActive = useRelume();
   return (
     <section className="z-[999] flex w-full items-center bg-scheme-background lg:min-h-18 lg:px-[5%] scheme-1 btn-light badge-alt">
       <div className="size-full lg:flex lg:items-center lg:justify-between">
         <div className="flex min-h-16 items-center justify-between px-[5%] md:min-h-18 lg:min-h-full lg:px-0">
-          <a href="#">
+          <Link href="/">
             <img
-              src="https://d22po4pjz3o32e.cloudfront.net/logo-image.svg"
-              alt="Logo image"
+              src="/logo/simonwynne-logo-black.svg"
+              alt="SimonWynne logo"
+              className="h-12 w-auto"
             />
-          </a>
+          </Link>
           <button
             className="-mr-2 flex size-12 flex-col items-center justify-center lg:hidden"
             onClick={useActive.toggleMobileMenu}
@@ -115,95 +88,59 @@ export function Navbar1() {
           transition={{ duration: 0.4 }}
           className="overflow-hidden px-[5%] lg:flex lg:items-center lg:overflow-visible lg:px-0 lg:[--height-closed:auto] lg:[--height-open:auto]"
         >
-          <a
-            href="#"
+          <Link
+            href="/"
+            onClick={useActive.closeMobileMenu}
             className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
           >
-            About me
-          </a>
-          <a
-            href="#"
+            Home
+          </Link>
+          <Link
+            href="/meet-the-team"
+            onClick={useActive.closeMobileMenu}
             className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
           >
-            Resources
-          </a>
-          <a
-            href="#"
+            Meet the Team
+          </Link>
+          <Link
+            href="/how-i-work"
+            onClick={useActive.closeMobileMenu}
             className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
           >
-            Contact
-          </a>
-          <div
-            onMouseEnter={useActive.openOnDesktopDropdownMenu}
-            onMouseLeave={useActive.closeOnDesktopDropdownMenu}
+            How I Work
+          </Link>
+          <Link
+            href="/services"
+            onClick={useActive.closeMobileMenu}
+            className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
           >
-            <p
-              role="button"
-              className="flex w-full items-center justify-between gap-2 py-3 text-left text-base lg:flex-none lg:justify-start lg:px-4 lg:py-2"
-              onClick={useActive.openOnMobileDropdownMenu}
-            >
-              More
-              <motion.span
-                variants={{ rotated: { rotate: 180 }, initial: { rotate: 0 } }}
-                animate={useActive.animateDropdownMenuIcon}
-                transition={{ duration: 0.3 }}
-              >
-                <KeyboardArrowDown className="text-scheme-text" />
-              </motion.span>
-            </p>
-            <AnimatePresence>
-              <ConditionalRenderedCard
-                variants={{
-                  open: {
-                    visibility: "visible",
-                    opacity: "var(--opacity-open, 100%)",
-                    display: "block",
-                    y: 0,
-                  },
-                  close: {
-                    visibility: "hidden",
-                    opacity: "var(--opacity-close, 0)",
-                    display: "none",
-                    y: "var(--y-close, 0%)",
-                  },
-                }}
-                animate={useActive.animateDropdownMenu}
-                initial="close"
-                exit="close"
-                transition={{ duration: 0.2 }}
-                className="lg:absolute lg:z-50 lg:p-2 lg:[--y-close:25%]"
-              >
-                <a
-                  href="#"
-                  className="block py-3 pl-[5%] text-base lg:px-4 lg:py-2"
-                >
-                  Meet Simon
-                </a>
-                <a
-                  href="#"
-                  className="block py-3 pl-[5%] text-base lg:px-4 lg:py-2"
-                >
-                  How I work
-                </a>
-                <a
-                  href="#"
-                  className="block py-3 pl-[5%] text-base lg:px-4 lg:py-2"
-                >
-                  Services
-                </a>
-              </ConditionalRenderedCard>
-            </AnimatePresence>
-          </div>
+            Services
+          </Link>
+          <Link
+            href="/blog"
+            onClick={useActive.closeMobileMenu}
+            className="block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2"
+          >
+            Blog
+          </Link>
           <div className="mt-6 flex flex-col items-center gap-4 lg:mt-0 lg:ml-4 lg:flex-row">
             <Button
+              asChild
               title="View all articles"
               variant="secondary"
               size="sm"
               className="w-full"
             >
-              View all articles
+              <Link href="/blog" onClick={useActive.closeMobileMenu}>
+                View all articles
+              </Link>
             </Button>
-            <Button title="Sign up" size="sm" className="w-full">
+            <Button
+              title="Sign up"
+              size="sm"
+              className="w-full"
+              onClick={useActive.closeMobileMenu}
+            >
               Sign up
             </Button>
           </div>

@@ -9,7 +9,9 @@ export function Header15() {
       <div className="container">
         <div className="mb-12 grid grid-cols-1 items-start gap-x-12 gap-y-5 md:mb-18 md:grid-cols-2 md:gap-y-8 lg:mb-20 lg:gap-x-20 lg:gap-y-16">
           <div>
-            <h1 className="text-h1 font-bold">Simon Wynne</h1>
+            <h1 className="text-h1 font-cal-sans font-bold text-left leading-[0.85] lg:leading-[1.1]">
+              Simon<br className="lg:hidden" /> Wynne
+            </h1>
           </div>
           <div>
             <p className="text-medium">

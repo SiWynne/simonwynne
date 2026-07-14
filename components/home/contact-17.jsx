@@ -5,7 +5,7 @@ import { Call, LocationOn, Mail } from "relume-icons";
 
 export function Contact17() {
   return (
-    <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-1 btn-light badge-alt">
+    <section id="contact" className="px-[5%] py-16 md:py-24 lg:py-28 scheme-1 btn-light badge-alt">
       <div className="container">
         <div className="grid auto-cols-fr grid-cols-1 gap-x-12 gap-y-12 md:grid-cols-3 md:gap-y-16">
           <div>
