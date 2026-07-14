@@ -3,10 +3,81 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 import React from "react";
 import { ChevronRight } from "relume-icons";
 
-export function Blog18() {
+const FALLBACK_IMAGE =
+  "https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg";
+
+function PostCard({ post, featured = false }) {
+  return (
+    <div>
+      <Link
+        href={`/blog/${post.slug}`}
+        className="mb-6 inline-block w-full max-w-full"
+      >
+        <div className="w-full overflow-hidden">
+          <img
+            src={post.image || FALLBACK_IMAGE}
+            alt={post.title}
+            className="aspect-video size-full rounded-image object-cover"
+          />
+        </div>
+      </Link>
+      <div className="mb-3 flex w-full items-center justify-start md:mb-4">
+        <Badge className="mr-4">{post.category}</Badge>
+        <p className="inline text-small font-semibold">
+          {post.readTime} min read
+        </p>
+      </div>
+      <Link
+        href={`/blog/${post.slug}`}
+        className={
+          featured
+            ? "mb-4 block max-w-full text-h4 font-bold"
+            : "mb-2 block max-w-full text-h5 font-bold"
+        }
+      >
+        {post.title}
+      </Link>
+      <p>{post.excerpt}</p>
+      <Button
+        asChild
+        variant="link"
+        size="link"
+        className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
+      >
+        <Link href={`/blog/${post.slug}`}>
+          Read more <ChevronRight className="text-scheme-text" />
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
+function CategoryPosts({ posts }) {
+  if (posts.length === 0) {
+    return <p className="text-medium">No posts in this category yet.</p>;
+  }
+
+  const [featuredPost, ...restPosts] = posts;
+
+  return (
+    <>
+      <PostCard post={featuredPost} featured />
+      {restPosts.length > 0 && (
+        <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 md:mt-16 md:grid-cols-2 md:gap-x-8 md:gap-y-16 lg:grid-cols-2">
+          {restPosts.map((post) => (
+            <PostCard key={post.slug} post={post} />
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+export function Blog18({ posts = [], categories = [] }) {
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-2 badge-alt alternate logo-alt">
       <div className="container">
@@ -33,786 +104,33 @@ export function Blog18() {
             >
               View all
             </TabsTrigger>
-            <TabsTrigger
-              value="category-one"
-              className="items-start justify-start rounded-button px-4 py-3 data-[state=active]:font-semibold data-[state=inactive]:border-transparent"
-            >
-              Craft
-            </TabsTrigger>
-            <TabsTrigger
-              value="category-two"
-              className="items-start justify-start rounded-button px-4 py-3 data-[state=active]:font-semibold data-[state=inactive]:border-transparent"
-            >
-              Business
-            </TabsTrigger>
-            <TabsTrigger
-              value="category-three"
-              className="items-start justify-start rounded-button px-4 py-3 data-[state=active]:font-semibold data-[state=inactive]:border-transparent"
-            >
-              Travel
-            </TabsTrigger>
-            <TabsTrigger
-              value="category-four"
-              className="items-start justify-start rounded-button px-4 py-3 data-[state=active]:font-semibold data-[state=inactive]:border-transparent"
-            >
-              Life
-            </TabsTrigger>
+            {categories.map((category) => (
+              <TabsTrigger
+                key={category}
+                value={category}
+                className="items-start justify-start rounded-button px-4 py-3 data-[state=active]:font-semibold data-[state=inactive]:border-transparent"
+              >
+                {category}
+              </TabsTrigger>
+            ))}
           </TabsList>
           <TabsContent
             value="view-all"
             className="data-[state=active]:animate-tabs"
           >
-            <a href="#" className="mb-6 inline-block w-full max-w-full">
-              <div className="w-full overflow-hidden">
-                <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                  alt="Relume placeholder image"
-                  className="aspect-video size-full rounded-image object-cover"
-                />
-              </div>
-            </a>
-            <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-              <Badge className="mr-4">Craft</Badge>
-              <p className="inline text-small font-semibold">7 min read</p>
-            </div>
-            <a href="#" className="mb-4 block max-w-full text-h4 font-bold">
-              The discipline of finishing what you start
-            </a>
-            <p>
-              Most writers quit before the work gets good. Here's why that
-              matters.
-            </p>
-            <Button
-              variant="link"
-              size="link"
-              className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-              iconRight={<ChevronRight className="text-scheme-text" />}
-            >
-              Read more
-            </Button>
-            <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 md:mt-16 md:grid-cols-2 md:gap-x-8 md:gap-y-16 lg:grid-cols-2">
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Business</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Building a brand that lasts
-                </a>
-                <p>
-                  Your reputation is built slowly and lost quickly. The details
-                  matter most.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Travel</Badge>
-                  <p className="inline text-small font-semibold">5 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  What I learned crossing the Atlantic
-                </a>
-                <p>
-                  Travel teaches you things no book ever could. Some lessons
-                  stick harder.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Life</Badge>
-                  <p className="inline text-small font-semibold">8 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  The cost of saying yes to everything
-                </a>
-                <p>
-                  Every commitment you make is a commitment you break somewhere
-                  else. Choose wisely.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Craft</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Writing without an audience in mind
-                </a>
-                <p>
-                  The best work comes when you stop thinking about who's
-                  watching and just write.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-            </div>
+            <CategoryPosts posts={posts} />
           </TabsContent>
-          <TabsContent
-            value="category-one"
-            className="data-[state=active]:animate-tabs"
-          >
-            <a href="#" className="mb-6 inline-block w-full max-w-full">
-              <div className="w-full overflow-hidden">
-                <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                  alt="Relume placeholder image"
-                  className="aspect-video size-full rounded-image object-cover"
-                />
-              </div>
-            </a>
-            <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-              <Badge className="mr-4">Craft</Badge>
-              <p className="inline text-small font-semibold">7 min read</p>
-            </div>
-            <a href="#" className="mb-4 block max-w-full text-h4 font-bold">
-              The discipline of finishing what you start
-            </a>
-            <p>
-              Most writers quit before the work gets good. Here's why that
-              matters.
-            </p>
-            <Button
-              variant="link"
-              size="link"
-              className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-              iconRight={<ChevronRight className="text-scheme-text" />}
+          {categories.map((category) => (
+            <TabsContent
+              key={category}
+              value={category}
+              className="data-[state=active]:animate-tabs"
             >
-              Read more
-            </Button>
-            <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 md:mt-16 md:grid-cols-2 md:gap-x-8 md:gap-y-16 lg:grid-cols-2">
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Business</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Building a brand that lasts
-                </a>
-                <p>
-                  Your reputation is built slowly and lost quickly. The details
-                  matter most.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Travel</Badge>
-                  <p className="inline text-small font-semibold">5 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  What I learned crossing the Atlantic
-                </a>
-                <p>
-                  Travel teaches you things no book ever could. Some lessons
-                  stick harder.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Life</Badge>
-                  <p className="inline text-small font-semibold">8 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  The cost of saying yes to everything
-                </a>
-                <p>
-                  Every commitment you make is a commitment you break somewhere
-                  else. Choose wisely.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Craft</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Writing without an audience in mind
-                </a>
-                <p>
-                  The best work comes when you stop thinking about who's
-                  watching and just write.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent
-            value="category-two"
-            className="data-[state=active]:animate-tabs"
-          >
-            <a href="#" className="mb-6 inline-block w-full max-w-full">
-              <div className="w-full overflow-hidden">
-                <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                  alt="Relume placeholder image"
-                  className="aspect-video size-full rounded-image object-cover"
-                />
-              </div>
-            </a>
-            <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-              <Badge className="mr-4">Craft</Badge>
-              <p className="inline text-small font-semibold">7 min read</p>
-            </div>
-            <a href="#" className="mb-4 block max-w-full text-h4 font-bold">
-              The discipline of finishing what you start
-            </a>
-            <p>
-              Most writers quit before the work gets good. Here's why that
-              matters.
-            </p>
-            <Button
-              variant="link"
-              size="link"
-              className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-              iconRight={<ChevronRight className="text-scheme-text" />}
-            >
-              Read more
-            </Button>
-            <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 md:mt-16 md:grid-cols-2 md:gap-x-8 md:gap-y-16 lg:grid-cols-2">
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Business</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Building a brand that lasts
-                </a>
-                <p>
-                  Your reputation is built slowly and lost quickly. The details
-                  matter most.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Travel</Badge>
-                  <p className="inline text-small font-semibold">5 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  What I learned crossing the Atlantic
-                </a>
-                <p>
-                  Travel teaches you things no book ever could. Some lessons
-                  stick harder.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Life</Badge>
-                  <p className="inline text-small font-semibold">8 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  The cost of saying yes to everything
-                </a>
-                <p>
-                  Every commitment you make is a commitment you break somewhere
-                  else. Choose wisely.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Craft</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Writing without an audience in mind
-                </a>
-                <p>
-                  The best work comes when you stop thinking about who's
-                  watching and just write.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent
-            value="category-three"
-            className="data-[state=active]:animate-tabs"
-          >
-            <a href="#" className="mb-6 inline-block w-full max-w-full">
-              <div className="w-full overflow-hidden">
-                <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                  alt="Relume placeholder image"
-                  className="aspect-video size-full rounded-image object-cover"
-                />
-              </div>
-            </a>
-            <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-              <Badge className="mr-4">Craft</Badge>
-              <p className="inline text-small font-semibold">7 min read</p>
-            </div>
-            <a href="#" className="mb-4 block max-w-full text-h4 font-bold">
-              The discipline of finishing what you start
-            </a>
-            <p>
-              Most writers quit before the work gets good. Here's why that
-              matters.
-            </p>
-            <Button
-              variant="link"
-              size="link"
-              className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-              iconRight={<ChevronRight className="text-scheme-text" />}
-            >
-              Read more
-            </Button>
-            <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 md:mt-16 md:grid-cols-2 md:gap-x-8 md:gap-y-16 lg:grid-cols-2">
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Business</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Building a brand that lasts
-                </a>
-                <p>
-                  Your reputation is built slowly and lost quickly. The details
-                  matter most.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Travel</Badge>
-                  <p className="inline text-small font-semibold">5 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  What I learned crossing the Atlantic
-                </a>
-                <p>
-                  Travel teaches you things no book ever could. Some lessons
-                  stick harder.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Life</Badge>
-                  <p className="inline text-small font-semibold">8 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  The cost of saying yes to everything
-                </a>
-                <p>
-                  Every commitment you make is a commitment you break somewhere
-                  else. Choose wisely.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Craft</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Writing without an audience in mind
-                </a>
-                <p>
-                  The best work comes when you stop thinking about who's
-                  watching and just write.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent
-            value="category-four"
-            className="data-[state=active]:animate-tabs"
-          >
-            <a href="#" className="mb-6 inline-block w-full max-w-full">
-              <div className="w-full overflow-hidden">
-                <img
-                  src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                  alt="Relume placeholder image"
-                  className="aspect-video size-full rounded-image object-cover"
-                />
-              </div>
-            </a>
-            <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-              <Badge className="mr-4">Craft</Badge>
-              <p className="inline text-small font-semibold">7 min read</p>
-            </div>
-            <a href="#" className="mb-4 block max-w-full text-h4 font-bold">
-              The discipline of finishing what you start
-            </a>
-            <p>
-              Most writers quit before the work gets good. Here's why that
-              matters.
-            </p>
-            <Button
-              variant="link"
-              size="link"
-              className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-              iconRight={<ChevronRight className="text-scheme-text" />}
-            >
-              Read more
-            </Button>
-            <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 md:mt-16 md:grid-cols-2 md:gap-x-8 md:gap-y-16 lg:grid-cols-2">
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Business</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Building a brand that lasts
-                </a>
-                <p>
-                  Your reputation is built slowly and lost quickly. The details
-                  matter most.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Travel</Badge>
-                  <p className="inline text-small font-semibold">5 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  What I learned crossing the Atlantic
-                </a>
-                <p>
-                  Travel teaches you things no book ever could. Some lessons
-                  stick harder.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Life</Badge>
-                  <p className="inline text-small font-semibold">8 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  The cost of saying yes to everything
-                </a>
-                <p>
-                  Every commitment you make is a commitment you break somewhere
-                  else. Choose wisely.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-              <div>
-                <a href="#" className="mb-6 inline-block w-full max-w-full">
-                  <div className="w-full overflow-hidden">
-                    <img
-                      src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image-landscape.svg"
-                      alt="Relume placeholder image"
-                      className="aspect-video size-full rounded-image object-cover"
-                    />
-                  </div>
-                </a>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  <Badge className="mr-4">Craft</Badge>
-                  <p className="inline text-small font-semibold">6 min read</p>
-                </div>
-                <a href="#" className="mb-2 block max-w-full text-h5 font-bold">
-                  Writing without an audience in mind
-                </a>
-                <p>
-                  The best work comes when you stop thinking about who's
-                  watching and just write.
-                </p>
-                <Button
-                  variant="link"
-                  size="link"
-                  className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
-                >
-                  Read more <ChevronRight className="text-scheme-text" />
-                </Button>
-              </div>
-            </div>
-          </TabsContent>
+              <CategoryPosts
+                posts={posts.filter((post) => post.category === category)}
+              />
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
     </section>
