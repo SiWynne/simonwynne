@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import clsx from "clsx";
+import Link from "next/link";
 import React, { useState } from "react";
 
 const useHover = () => {
@@ -66,8 +67,8 @@ export function Portfolio22() {
                   />
                 </div>
               </div>
-              <a
-                href="#"
+              <Link
+                href="/work/clarity-found"
                 className="relative z-10 flex flex-col flex-wrap items-start justify-start gap-4 border-b border-scheme-border py-5 no-underline transition-all duration-300 sm:flex-row sm:items-center md:gap-8 md:py-6"
                 onMouseEnter={hoverState.getLinkHoverHandler(0)}
               >
@@ -78,7 +79,7 @@ export function Portfolio22() {
                   </h3>
                   <Badge>Strategy</Badge>
                 </div>
-              </a>
+              </Link>
             </div>
             <div>
               <div className="absolute top-0 right-0 left-0 hidden h-full w-1/2 pr-10 lg:block">
@@ -90,8 +91,8 @@ export function Portfolio22() {
                   />
                 </div>
               </div>
-              <a
-                href="#"
+              <Link
+                href="/work/growth-built"
                 className="relative z-10 flex flex-col flex-wrap items-start justify-start gap-4 border-b border-scheme-border py-5 no-underline transition-all duration-300 sm:flex-row sm:items-center md:gap-8 md:py-6"
                 onMouseEnter={hoverState.getLinkHoverHandler(1)}
               >
@@ -102,7 +103,7 @@ export function Portfolio22() {
                   </h3>
                   <Badge>Positioning</Badge>
                 </div>
-              </a>
+              </Link>
             </div>
             <div>
               <div className="absolute top-0 right-0 left-0 hidden h-full w-1/2 pr-10 lg:block">
@@ -114,8 +115,8 @@ export function Portfolio22() {
                   />
                 </div>
               </div>
-              <a
-                href="#"
+              <Link
+                href="/work/momentum-gained"
                 className="relative z-10 flex flex-col flex-wrap items-start justify-start gap-4 border-b border-scheme-border py-5 no-underline transition-all duration-300 sm:flex-row sm:items-center md:gap-8 md:py-6"
                 onMouseEnter={hoverState.getLinkHoverHandler(2)}
               >
@@ -126,7 +127,7 @@ export function Portfolio22() {
                   </h3>
                   <Badge>Storytelling</Badge>
                 </div>
-              </a>
+              </Link>
             </div>
             <div>
               <div className="absolute top-0 right-0 left-0 hidden h-full w-1/2 pr-10 lg:block">
@@ -138,8 +139,8 @@ export function Portfolio22() {
                   />
                 </div>
               </div>
-              <a
-                href="#"
+              <Link
+                href="/work/systems-created"
                 className="relative z-10 flex flex-col flex-wrap items-start justify-start gap-4 border-b border-scheme-border py-5 no-underline transition-all duration-300 sm:flex-row sm:items-center md:gap-8 md:py-6"
                 onMouseEnter={hoverState.getLinkHoverHandler(3)}
               >
@@ -150,7 +151,7 @@ export function Portfolio22() {
                   </h3>
                   <Badge>Operations</Badge>
                 </div>
-              </a>
+              </Link>
             </div>
             <div>
               <div className="absolute top-0 right-0 left-0 hidden h-full w-1/2 pr-10 lg:block">
@@ -162,8 +163,8 @@ export function Portfolio22() {
                   />
                 </div>
               </div>
-              <a
-                href="#"
+              <Link
+                href="/work/voice-developed"
                 className="relative z-10 flex flex-col flex-wrap items-start justify-start gap-4 border-b border-scheme-border py-5 no-underline transition-all duration-300 sm:flex-row sm:items-center md:gap-8 md:py-6"
                 onMouseEnter={hoverState.getLinkHoverHandler(4)}
               >
@@ -174,7 +175,7 @@ export function Portfolio22() {
                   </h3>
                   <Badge>Brand</Badge>
                 </div>
-              </a>
+              </Link>
             </div>
             <div>
               <div className="absolute top-0 right-0 left-0 hidden h-full w-1/2 pr-10 lg:block">
@@ -186,8 +187,8 @@ export function Portfolio22() {
                   />
                 </div>
               </div>
-              <a
-                href="#"
+              <Link
+                href="/work/confidence-earned"
                 className="relative z-10 flex flex-col flex-wrap items-start justify-start gap-4 border-b border-scheme-border py-5 no-underline transition-all duration-300 sm:flex-row sm:items-center md:gap-8 md:py-6"
                 onMouseEnter={hoverState.getLinkHoverHandler(5)}
               >
@@ -198,7 +199,7 @@ export function Portfolio22() {
                   </h3>
                   <Badge>Leadership</Badge>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
