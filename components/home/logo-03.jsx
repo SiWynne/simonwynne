@@ -12,6 +12,7 @@ const LOGOS = [
   { src: "/images/carousel-logos/4finLogo.svg", alt: "4Finance logo" },
   { src: "/images/carousel-logos/five-logo.png", alt: "Five logo" },
   { src: "/images/carousel-logos/lbg-logo.svg", alt: "LBG logo" },
+  { src: "/images/carousel-logos/standardlife-logo.svg", alt: "Standard Life logo" },
   { src: "/images/carousel-logos/beyondsport-logo.svg", alt: "Beyond Sport logo" },
   { src: "/images/carousel-logos/ford-logo.png", alt: "Ford logo" },
   { src: "/images/carousel-logos/harrypotter-logo.png", alt: "The Wizarding World of Harry Potter logo" },
