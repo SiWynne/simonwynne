@@ -9,7 +9,7 @@ const LOGOS = [
   { src: "/images/carousel-logos/bt-logo.png", alt: "BT logo" },
   { src: "/images/carousel-logos/ace-logo.svg", alt: "ACE logo" },
   { src: "/images/carousel-logos/bbc-logo.svg", alt: "BBC logo" },
-  { src: "/images/carousel-logos/4finLogo.png", alt: "4Finance logo" },
+  { src: "/images/carousel-logos/4finLogo.svg", alt: "4Finance logo" },
   { src: "/images/carousel-logos/five-logo.png", alt: "Five logo" },
   { src: "/images/carousel-logos/lbg-logo.svg", alt: "LBG logo" },
   { src: "/images/carousel-logos/beyondsport-logo.svg", alt: "Beyond Sport logo" },
