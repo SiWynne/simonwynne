@@ -1,7 +1,0 @@
-# Serve HTML fresh. Without this the CDN picks its own expiry and keeps
-# handing out builds from previous deploys.
-<IfModule mod_headers.c>
-  <FilesMatch "\.html$">
-    Header set Cache-Control "public, max-age=0, s-maxage=0, must-revalidate"
-  </FilesMatch>
-</IfModule>
