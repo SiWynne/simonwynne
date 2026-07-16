@@ -1,5 +1,5 @@
 import { Blog18 } from "@/components/blog/blog-18";
-import { Logo3 } from "@/components/blog/logo-03";
+import { LogoCarousel } from "@/components/shared/logo-carousel";
 import { getAllCategories, getAllPosts } from "@/lib/blog";
 
 export default function Page() {
@@ -9,7 +9,7 @@ export default function Page() {
   return (
     <div>
       <Blog18 posts={posts} categories={categories} />
-      <Logo3 />
+      <LogoCarousel />
     </div>
   );
 }

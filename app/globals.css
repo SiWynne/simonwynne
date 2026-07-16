@@ -393,7 +393,7 @@
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-loop-horizontally: loop-horizontally 25s linear infinite;
+  --animate-loop-horizontally: loop-horizontally 30s linear infinite;
   --animate-loop-testimonials: loop-testimonials 30s linear infinite;
   --animate-loop-vertically: loop-vertically 30s linear infinite;
   --animate-loop-vertically-top: loop-vertically-top 50s linear infinite;

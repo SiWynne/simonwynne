@@ -3,7 +3,7 @@
 import React from "react";
 import { Header15 } from "@/components/home/header-15";
 import { Cta14 } from "@/components/home/cta-14";
-import { Logo3 } from "@/components/home/logo-03";
+import { LogoCarousel } from "@/components/shared/logo-carousel";
 import { Event7 } from "@/components/home/event-07";
 import { Portfolio11 } from "@/components/home/portfolio-11";
 import { Portfolio22 } from "@/components/home/portfolio-22";
@@ -16,7 +16,7 @@ export default function Page() {
     <div>
       <Header15 />
       <Cta14 />
-      <Logo3 />
+      <LogoCarousel />
       <Event7 />
       <Portfolio11 />
       <Portfolio22 />

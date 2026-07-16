@@ -64,7 +64,7 @@ function LogoTrack({ ariaHidden = false }) {
   );
 }
 
-export function Logo3() {
+export function LogoCarousel() {
   return (
     <section className="overflow-hidden py-12 md:py-16 lg:py-20 scheme-1 btn-light badge-alt">
       <div className="container mb-8 max-w-lg px-[5%] md:mb-10 lg:mb-12">
