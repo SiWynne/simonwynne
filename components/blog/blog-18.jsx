@@ -83,9 +83,7 @@ export function Blog18({ posts = [], categories = [] }) {
       <div className="container">
         <div className="mb-12 md:mb-18 lg:mb-20">
           <div className="w-full max-w-lg">
-            <h1 className="mb-5 text-h1 font-bold md:mb-6">
-              Stories worth reading
-            </h1>
+            <h1 className="mb-5 text-h1 font-bold md:mb-6">Simon&apos;s Blog</h1>
             <p className="text-medium">
               Thoughts on craft, life, and the work that matters
             </p>
