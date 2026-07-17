@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# design system source (lives in ../source-files/archive/relume-exports)
+/reference

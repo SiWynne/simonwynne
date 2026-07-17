@@ -1,6 +1,6 @@
 # Sitemap
 
-Scheme numbers below match the 4 schemes implemented in `app/globals.css` (`scheme-1`–`scheme-4`) and `reference/DESIGN.md` — verified against each component's actual `scheme-N` class, not the original 6-scheme plan.
+Scheme numbers below match the 4 schemes implemented in `app/globals.css` (`scheme-1`–`scheme-4`) and `docs/design-implementation.md` — verified against each component's actual `scheme-N` class, not the original 6-scheme plan.
 
 ## Home
 
