@@ -38,7 +38,8 @@ values.** Colours, type families, the accent rule, the character and the four sc
 recipes live in the brand source of truth:
 
 `source-files/brand/design-tokens.md`
-(outside this repo, in the vault at `business/simonwynne/`)
+(outside this repo — `../source-files/brand/` from the site root, in the
+`simonwynne/` project folder)
 
 If a hex code or font choice needs to change, it changes there. This file only records
 how those decisions are wired into the code, plus the values that are genuinely
