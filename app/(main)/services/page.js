@@ -6,6 +6,7 @@ import { Layout239 } from "@/components/services/layout-239";
 import { Layout237 } from "@/components/services/layout-237";
 import { LogoCarousel } from "@/components/shared/logo-carousel";
 import { Testimonial1 } from "@/components/services/testimonial-01";
+import { ServiceAreasLink } from "@/components/services/service-areas-link";
 import { Cta1 } from "@/components/services/cta-01";
 
 export default function Page() {
@@ -16,6 +17,7 @@ export default function Page() {
       <Layout237 />
       <LogoCarousel />
       <Testimonial1 />
+      <ServiceAreasLink />
       <Cta1 />
     </div>
   );
