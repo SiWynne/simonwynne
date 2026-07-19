@@ -14,7 +14,7 @@ export function HeaderAreas() {
           >
             ← Back to Services
           </Link>
-          <h1 className="mb-5 text-h1 font-bold md:mb-6">Service areas</h1>
+          <h1 className="mb-5 text-h1 font-bold md:mb-6">Service Areas</h1>
           <p className="text-medium">
             Where I can meet you in person. In-person engagements are available
             across three regions — Wales, Kent and London. Anywhere else, I work
