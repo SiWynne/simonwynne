@@ -4,11 +4,11 @@ import React from "react";
 
 const regions = [
   {
-    name: "Wales",
+    name: null,
     scheme: "scheme-2",
     groups: [
       {
-        name: "South Wales",
+        name: "Wales | South",
         clusters: [
           {
             name: "Cardiff",
@@ -70,10 +70,9 @@ const regions = [
         ],
       },
       {
-        name: "Mid Wales",
+        name: "Wales | Central",
         clusters: [
           {
-            name: "Powys",
             towns: [
               "Llandrindod Wells",
               "Builth Wells / Llanelwedd",
@@ -92,8 +91,12 @@ const regions = [
               "Kington",
             ],
           },
+        ],
+      },
+      {
+        name: "Wales | Brecon Beacons",
+        clusters: [
           {
-            name: "Brecon Beacons",
             towns: [
               "Hay-on-Wye",
               "Talgarth",
@@ -110,10 +113,11 @@ const regions = [
     ],
   },
   {
-    name: "Kent",
-    scheme: "scheme-1",
+    name: null,
+    scheme: "scheme-2",
     groups: [
       {
+        name: "Kent",
         clusters: [
           {
             towns: [
@@ -150,11 +154,11 @@ const regions = [
     ],
   },
   {
-    name: "London",
+    name: null,
     scheme: "scheme-2",
     groups: [
       {
-        name: "Central London",
+        name: "London | Central",
         clusters: [
           {
             towns: [
@@ -172,7 +176,7 @@ const regions = [
         ],
       },
       {
-        name: "South East London",
+        name: "London | South East",
         clusters: [
           {
             towns: [
@@ -217,7 +221,7 @@ function Cluster({ cluster }) {
   return (
     <div className="mb-8 last:mb-0 md:mb-10">
       {cluster.name && (
-        <h4 className="mb-4 text-h4 font-bold md:mb-5">{cluster.name}</h4>
+        <h3 className="mb-4 text-h3 font-bold md:mb-5">{cluster.name}</h3>
       )}
       <TownList towns={cluster.towns} />
     </div>
@@ -228,7 +232,7 @@ function Group({ group }) {
   return (
     <div className="mb-10 last:mb-0 md:mb-14">
       {group.name && (
-        <h3 className="mb-6 text-h3 font-bold md:mb-8">{group.name}</h3>
+        <h2 className="mb-6 text-h2 font-bold md:mb-8">{group.name}</h2>
       )}
       {group.clusters.map((cluster, i) => (
         <Cluster key={cluster.name ?? i} cluster={cluster} />
@@ -240,15 +244,17 @@ function Group({ group }) {
 export function ServiceAreasList() {
   return (
     <>
-      {regions.map((region) => (
+      {regions.map((region, ri) => (
         <section
-          key={region.name}
+          key={region.name ?? ri}
           className={`px-[5%] py-16 md:py-24 lg:py-28 ${region.scheme} badge-alt`}
         >
           <div className="container">
-            <h2 className="mb-8 text-h2 font-bold md:mb-12 lg:mb-14">
-              {region.name}
-            </h2>
+            {region.name && (
+              <h2 className="mb-8 text-h2 font-bold md:mb-12 lg:mb-14">
+                {region.name}
+              </h2>
+            )}
             {region.groups.map((group, i) => (
               <Group key={group.name ?? i} group={group} />
             ))}
