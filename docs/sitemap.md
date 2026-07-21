@@ -20,7 +20,7 @@ To add a new page type (e.g. a landing-page group), create `app/(landing)/layout
 | 1 | Navbar | `components/navbar-01` | 1 |
 | 2 | Hero Section | `components/home/header-15` | 1 |
 | 3 | Newsletter | `components/home/cta-14` | 2 |
-| 4 | Logo | `components/home/logo-03` | 1 |
+| 4 | Logo | `components/shared/logo-carousel` | 1 |
 | 5 | Workshops and Livestreams | `components/home/event-07` | 3 |
 | 6 | Toolkits & Playbooks | `components/home/portfolio-11` | 4 |
 | 7 | Outcomes - Some Examples | `components/home/portfolio-22` | 3 |
@@ -47,16 +47,18 @@ To add a new page type (e.g. a landing-page group), create `app/(landing)/layout
 |---|---------|-----------|--------|
 | 1 | Navbar | `components/navbar-01` | 1 |
 | 2 | Header Section | `components/meet-the-team/header-46` | 1 |
-| 3 | Me & Ai | `components/meet-the-team/layout-615` | *not built* |
-| 4 | CTA Section | `components/meet-the-team/cta-01` | 3 |
-| 5 | Logo | `components/meet-the-team/logo-03` | 1 |
-| 6 | Footer | `components/footer-01` | 2 |
+| 3 | Me & Ai | `components/meet-the-team/layout-618` | 1 |
+| 4 | Timeline | `components/meet-the-team/timeline-05` | 1 |
+| 5 | Logo | `components/shared/logo-carousel` | 1 |
+| 6 | CTA Section | `components/meet-the-team/cta-01` | 3 |
+| 7 | Footer | `components/footer-01` | 2 |
 
 - Navbar [Scheme 1]
 - Header Section [Scheme 1]: Welcoming headline introducing the team and the value they bring.
-- Me & Ai — **not implemented.** `layout-615.jsx` doesn't exist in `components/meet-the-team/` and `app/(main)/meet-the-team/page.js` doesn't render it; the page currently goes straight from the header to the CTA section. Profiles of each team member with photos, roles, bios, and key strengths (as originally planned).
-- CTA Section [Scheme 3]: Encouragement to connect with the team or learn more about working together.
+- Me & Ai [Scheme 1]: Built as a before-and-after — two panels (image + title + subtitle) split by a divider, with a summary block below. Content from `content/meet-the-team/me-and-ai.mdx` via `lib/me-and-ai.js`. Placeholder copy and images — not yet written. Supersedes the originally planned `layout-615`, which was never built.
+- Timeline [Scheme 1]: Scroll-driven timeline. Content from `content/meet-the-team/timeline.mdx` via `lib/timeline.js`.
 - Logo [Scheme 1]
+- CTA Section [Scheme 3]: Encouragement to connect with the team or learn more about working together. Sits last, directly above the footer.
 - Footer [Scheme 2]
 
 ### How I Work
@@ -68,7 +70,7 @@ To add a new page type (e.g. a landing-page group), create `app/(landing)/layout
 | 3 | How It Works Section | `components/how-i-work/layout-300` | 2 |
 | 4 | Feature Section | `components/how-i-work/layout-192` | 3 |
 | 5 | Testimonial Section | `components/how-i-work/testimonial-01` | 2 |
-| 6 | Logo | `components/how-i-work/logo-03` | 1 |
+| 6 | Logo | `components/shared/logo-carousel` | 1 |
 | 7 | CTA Section | `components/how-i-work/cta-01` | 3 |
 | 8 | Footer | `components/footer-01` | 2 |
 
@@ -89,7 +91,7 @@ To add a new page type (e.g. a landing-page group), create `app/(landing)/layout
 | 2 | Header Section | `components/services/header-64` | 1 |
 | 3 | Services Section | `components/services/layout-239` | 2 |
 | 4 | Features List Section | `components/services/layout-237` | 3 |
-| 5 | Logo | `components/services/logo-03` | 1 |
+| 5 | Logo | `components/shared/logo-carousel` | 1 |
 | 6 | Testimonial Section | `components/services/testimonial-01` | 3 |
 | 7 | Pricing Section | `components/services/pricing-23` | *not built* |
 | 8 | Service Areas Link | `components/services/service-areas-link` | 1 |
@@ -113,7 +115,7 @@ To add a new page type (e.g. a landing-page group), create `app/(landing)/layout
 |---|---------|-----------|--------|
 | 1 | Navbar | `components/navbar-01` | 1 |
 | 2 | Featured Blog List Header Section | `components/blog/blog-18` | 2 |
-| 3 | Logo | `components/blog/logo-03` | 1 |
+| 3 | Logo | `components/shared/logo-carousel` | 1 |
 | 4 | Blog List Section | `components/blog/blog-66` | *not built* |
 | 5 | Footer | `components/footer-01` | 2 |
 
@@ -133,10 +135,12 @@ Tertiary page at `/services/service-areas` (route group `(tertiary)`). Uses the 
 | 2 | Header Section | `components/service-areas/header-areas` | 1 |
 | 3 | Service Areas List | `components/service-areas/service-areas-list` | 2 / 1 / 2 |
 | 4 | CTA Section | `components/service-areas/cta-areas` | 1 |
-| 5 | Footer | `components/footer-01` | 2 |
+| 5 | Logo | `components/shared/logo-carousel` | 1 |
+| 6 | Footer | `components/footer-01` | 2 |
 
 - Navbar (minimal) [Scheme 1]: logo + "Get in Touch" CTA (→ `/#contact`). No primary nav links.
 - Header Section [Scheme 1]: Page title and a "← Back to Services" link.
 - Service Areas List: one alternating-scheme section per region — Wales [Scheme 2], Kent [Scheme 1], London [Scheme 2] — each rendering sub-regions/clusters and their towns as a responsive column list.
 - CTA Section [Scheme 1]: "Back to Services" button.
+- Logo [Scheme 1]: shared `logo-carousel`, same instance used on Home, Meet the Team, How I Work, Blog and Services.
 - Footer [Scheme 2]

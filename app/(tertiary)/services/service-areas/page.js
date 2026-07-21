@@ -2,6 +2,7 @@ import React from "react";
 import { HeaderAreas } from "@/components/service-areas/header-areas";
 import { ServiceAreasList } from "@/components/service-areas/service-areas-list";
 import { CtaAreas } from "@/components/service-areas/cta-areas";
+import { LogoCarousel } from "@/components/shared/logo-carousel";
 import { getServiceAreas } from "@/lib/service-areas";
 
 export function generateMetadata() {
@@ -30,6 +31,7 @@ export default function Page() {
           buttonHref={cta.buttonHref}
         />
       )}
+      <LogoCarousel />
     </div>
   );
 }
