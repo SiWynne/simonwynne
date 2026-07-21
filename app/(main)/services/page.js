@@ -15,9 +15,9 @@ export default function Page() {
       <Header64 />
       <Layout239 />
       <Layout237 />
-      <LogoCarousel />
       <Testimonial1 />
       <ServiceAreasLink />
+      <LogoCarousel />
       <Cta1 />
     </div>
   );

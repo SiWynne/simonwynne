@@ -91,10 +91,10 @@ To add a new page type (e.g. a landing-page group), create `app/(landing)/layout
 | 2 | Header Section | `components/services/header-64` | 1 |
 | 3 | Services Section | `components/services/layout-239` | 2 |
 | 4 | Features List Section | `components/services/layout-237` | 3 |
-| 5 | Logo | `components/shared/logo-carousel` | 1 |
-| 6 | Testimonial Section | `components/services/testimonial-01` | 3 |
-| 7 | Pricing Section | `components/services/pricing-23` | *not built* |
-| 8 | Service Areas Link | `components/services/service-areas-link` | 1 |
+| 5 | Testimonial Section | `components/services/testimonial-01` | 3 |
+| 6 | Pricing Section | `components/services/pricing-23` | *not built* |
+| 7 | Service Areas Link | `components/services/service-areas-link` | 1 |
+| 8 | Logo | `components/shared/logo-carousel` | 1 |
 | 9 | CTA Section | `components/services/cta-01` | 2 |
 | 10 | Footer | `components/footer-01` | 2 |
 
@@ -102,10 +102,10 @@ To add a new page type (e.g. a landing-page group), create `app/(landing)/layout
 - Header Section [Scheme 1]: Page title and a brief introduction to your services and philosophy.
 - Services Section [Scheme 2]: Overview of the main services you offer with short descriptions (e.g., coaching, consulting, workshops).
 - Features List Section [Scheme 3]: Up to three key benefits or unique aspects of your services.
-- Logo [Scheme 1]
 - Testimonial Section [Scheme 3]: Client testimonials or success stories to build trust.
 - Pricing Section — **not implemented.** `pricing-23.jsx` doesn't exist in `components/services/` and `app/(main)/services/page.js` doesn't render it. Transparent pricing or packages (optional, if relevant to your brand), as originally planned.
 - Service Areas Link [Scheme 1]: Title, subtitle and a "Service Areas" button linking to the tertiary `/services/service-areas` page (in-person coverage).
+- Logo [Scheme 1]: sits directly above the CTA, matching Meet the Team and Service Areas.
 - CTA Section [Scheme 2]: Call to action inviting visitors to book a consultation, get in touch, or request a quote.
 - Footer [Scheme 2]
 
