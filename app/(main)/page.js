@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Header15 } from "@/components/home/header-15";
 import { Cta14 } from "@/components/home/cta-14";
@@ -10,8 +8,11 @@ import { Portfolio22 } from "@/components/home/portfolio-22";
 import { Blog34 } from "@/components/home/blog-34";
 import { Event27 } from "@/components/home/event-27";
 import { Contact17 } from "@/components/home/contact-17";
+import { getAllCaseStudies } from "@/lib/work";
 
 export default function Page() {
+  const caseStudies = getAllCaseStudies();
+
   return (
     <div>
       <Header15 />
@@ -19,7 +20,7 @@ export default function Page() {
       <LogoCarousel />
       <Event7 />
       <Portfolio11 />
-      <Portfolio22 />
+      <Portfolio22 caseStudies={caseStudies} />
       <Blog34 />
       <Event27 />
       <Contact17 />
