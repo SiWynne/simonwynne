@@ -13,17 +13,9 @@ const useHover = () => {
   const getLinkHoverHandler = (index) => () => {
     setHoveredIndex(index);
   };
-  const getOrderNumberClassNames = (index) => {
-    return clsx(
-      "text-h5 font-bold transition-colors duration-300",
-      hoveredIndex === null || hoveredIndex === index
-        ? "text-scheme-text"
-        : "lg:text-scheme-text/20",
-    );
-  };
   const getHeadingClassNames = (index) => {
     return clsx(
-      "text-h4 font-bold transition-colors duration-300",
+      "text-h5 font-bold transition-colors duration-300",
       hoveredIndex === null || hoveredIndex === index
         ? "text-scheme-text"
         : "lg:text-scheme-text/20",
@@ -41,7 +33,6 @@ const useHover = () => {
   return {
     handleMouseLeave,
     getLinkHoverHandler,
-    getOrderNumberClassNames,
     getHeadingClassNames,
     getImageOverClassNames,
   };
@@ -52,6 +43,11 @@ export function Portfolio22({ caseStudies = [] }) {
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-3 badge-alt alternate logo-alt">
       <div className="container">
+        <div className="mb-12 max-w-lg md:mb-18 lg:mb-20">
+          <h2 className="text-h2 font-bold">
+            Some Outcomes achieved for Customers
+          </h2>
+        </div>
         <div className="lg:grid-auto-cols-fr relative block lg:grid lg:grid-cols-2 lg:items-start">
           <div
             className="lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-2 lg:pl-10"
@@ -73,9 +69,6 @@ export function Portfolio22({ caseStudies = [] }) {
                   className="relative z-10 flex flex-col flex-wrap items-start justify-start gap-4 border-b border-scheme-border py-5 no-underline transition-all duration-300 sm:flex-row sm:items-center md:gap-8 md:py-6"
                   onMouseEnter={hoverState.getLinkHoverHandler(index)}
                 >
-                  <div className={hoverState.getOrderNumberClassNames(index)}>
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
                   <div className="flex flex-wrap items-center gap-4">
                     <h3 className={hoverState.getHeadingClassNames(index)}>
                       {study.title}
