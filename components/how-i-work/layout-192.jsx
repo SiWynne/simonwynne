@@ -17,7 +17,6 @@ export function Layout192() {
             />
           </div>
           <div className="order-1 lg:order-2">
-            <p className="mb-3 font-semibold md:mb-4">Approach</p>
             <h2 className="mb-5 text-h2 font-bold md:mb-6">
               Transparency and accountability at every turn
             </h2>

@@ -1,11 +1,10 @@
 import React from "react";
 
-export function Layout618({ tagline, heading, summary, items = [] }) {
+export function Layout618({ heading, summary, items = [] }) {
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-1 btn-light badge-alt">
       <div className="container">
         <div className="mb-12 md:mb-18 lg:mb-20">
-          <p className="mb-3 font-semibold md:mb-4">{tagline}</p>
           <h2 className="text-h2 font-bold">{heading}</h2>
         </div>
 

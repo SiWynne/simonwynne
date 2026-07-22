@@ -11,7 +11,6 @@ export function Layout239() {
         <div className="flex flex-col items-center">
           <div className="mb-12 text-center md:mb-18 lg:mb-20">
             <div className="w-full max-w-lg">
-              <p className="mb-3 font-semibold md:mb-4">Services</p>
               <h2 className="mb-5 text-h2 font-bold md:mb-6">
                 What I offer to help you succeed
               </h2>
