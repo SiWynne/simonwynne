@@ -11,8 +11,7 @@ export function Event7() {
       <div className="container">
         <div className="mb-12 md:mb-18 lg:mb-20">
           <div className="mx-auto max-w-lg text-center">
-            <h4 className="font-semibold">Events</h4>
-            <h1 className="mt-3 text-h2 font-bold md:mt-4">
+            <h1 className="text-h2 font-bold">
               Online & In-Person Sessions
             </h1>
             <p className="mt-5 text-medium md:mt-6">

@@ -10,7 +10,6 @@ export function Portfolio11() {
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-4 btn-light badge-alt">
       <div className="container">
         <div className="mx-auto mb-12 max-w-lg text-center md:mb-18 lg:mb-20">
-          <p className="mb-3 font-semibold md:mb-4">Testimonials</p>
           <h2 className="mb-5 text-h2 font-bold md:mb-6">
             ToolKits & Playbooks
           </h2>

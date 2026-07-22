@@ -12,8 +12,7 @@ export function Event27() {
       <div className="container">
         <div className="mb-12 md:mb-18 lg:mb-20">
           <div className="mx-auto max-w-lg text-center">
-            <h4 className="font-semibold">Video</h4>
-            <h1 className="mt-3 text-h2 font-bold md:mt-4">Videos</h1>
+            <h1 className="text-h2 font-bold">Videos</h1>
             <p className="mt-5 text-medium md:mt-6">
               Quick ideas worth your attention.
             </p>
