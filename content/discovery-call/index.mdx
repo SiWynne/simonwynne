@@ -1,0 +1,41 @@
+---
+title: Book a Discovery Call
+backLabel: "← Back to home"
+backHref: /
+intro: >
+  Twenty minutes, no charge, no pitch. Tell me what you're working on and I'll
+  tell you honestly whether I can help. Pick a slot that suits you.
+
+formHeading: Confirm your slot
+submitLabel: Book this slot
+successHeading: You're booked
+successMessage: >
+  I'll send a calendar invite and a short note about what to have to hand. If
+  anything changes, just reply to that email.
+
+# Sessions run in these windows, split into slotMinutes-long slots.
+slotMinutes: 20
+sessions:
+  - start: "10:00"
+    end: "11:00"
+  - start: "15:00"
+    end: "16:00"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Already-booked slots. The site is a static export with no database, so this
+# list is the only source of truth — add a line when a slot is taken, in
+# "YYYY-MM-DD HH:MM" (24h, slot start time). Stale entries in the past are
+# ignored automatically.
+#
+# This does NOT prevent double-booking between deploys. For real availability
+# you need a booking service (Cal.com, Calendly, SavvyCal) — see the note in
+# components/discovery-call/booking-calendar.jsx.
+# ─────────────────────────────────────────────────────────────────────────────
+booked:
+  - "2026-07-23 10:20"
+  - "2026-07-23 15:00"
+  - "2026-07-24 10:00"
+
+formEndpoint: ""
+fallbackEmail: hello@simonwynne.com
+---
