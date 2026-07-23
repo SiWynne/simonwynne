@@ -18,7 +18,7 @@ export function NavbarMinimal() {
           />
         </Link>
         <Button asChild title="Get in Touch" size="sm">
-          <Link href="/#contact">Get in Touch</Link>
+          <Link href="/contact">Get in Touch</Link>
         </Button>
       </div>
     </section>

@@ -1,0 +1,44 @@
+---
+title: Tools & Playbooks Waiting List
+backLabel: "← Back to home"
+backHref: /
+intro: >
+  The toolkits and playbooks I use with clients, written up so you can run them
+  yourself. Join the list and I'll send them as they're ready.
+formHeading: Join the list
+submitLabel: Join the waiting list
+successMessage: You're on the list. I'll send the first toolkit as soon as it's ready.
+
+formEndpoint: ""
+fallbackEmail: hello@simonwynne.com
+
+fields:
+  - name: name
+    label: Name
+    type: text
+    autocomplete: name
+    required: true
+  - name: email
+    label: Email
+    type: email
+    autocomplete: email
+    required: true
+    placeholder: you@company.com
+  - name: company
+    label: Company
+    type: text
+    autocomplete: organization
+    optional: true
+  - name: region
+    label: Region
+    type: select
+    options:
+      - All Regions
+      - Wales
+      - London
+      - Kent
+  - name: newsletter
+    label: Subscribe me to the newsletter
+    type: checkbox
+    defaultChecked: true
+---

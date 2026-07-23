@@ -1,0 +1,173 @@
+---
+title: AI Readiness Test
+backLabel: "← Back to home"
+backHref: /
+intro: >
+  Six questions, about three minutes. You'll get your three highest-return,
+  lowest-effort opportunities ranked — not a score out of a hundred.
+resultsHeading: Your three best opportunities
+resultsIntro: >
+  Ranked by return against effort. Start at the top — the first one pays for
+  the second.
+fallbackEmail: hello@simonwynne.com
+formEndpoint: ""
+
+# Overall readiness. Scored as the inverse of accumulated pain: a business with
+# documented process, trusted scheduling and early defect detection is ready to
+# build on. One with none of that gets more value from fixing foundations first.
+# Bands are checked high to low; `min` is the percentage floor for each.
+readinessHeading: Where you're starting from
+readinessBands:
+  - min: 75
+    label: Ready to build
+    summary: >
+      The foundations are solid. Your processes are documented and predictable
+      enough that AI has something reliable to work with — the opportunities
+      below are about extending what already works, not repairing it.
+  - min: 50
+    label: Ready in parts
+    summary: >
+      Some of the business is in good shape and some isn't. The opportunities
+      below are ordered so the strongest ground comes first; that's usually the
+      fastest route to something measurable.
+  - min: 25
+    label: Groundwork first
+    summary: >
+      There's real value here, but a few things need fixing before automation
+      would compound rather than entrench the problem. Start at the top of the
+      list — those are the ones worth doing regardless.
+  - min: 0
+    label: Foundations first
+    summary: >
+      Adding AI now would mostly make existing problems faster. The good news is
+      that the fixes below are unglamorous and well understood, and they pay for
+      themselves before any AI is involved.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PLACEHOLDER CONTENT — replace with your real framework.
+#
+# How scoring works: each answer adds points to one or more opportunities
+# below. Final rank = accumulated return ÷ effort. Highest ratio wins, so a
+# cheap fix that solves a real pain outranks an expensive one that solves more.
+#
+# effort: 1 (days) → 5 (a quarter or more). Your judgement, not the visitor's.
+# ─────────────────────────────────────────────────────────────────────────────
+
+opportunities:
+  - id: quoting
+    name: Quote turnaround
+    effort: 2
+    summary: Cut the time between enquiry and quote out the door.
+    detail: >
+      PLACEHOLDER. Describe what the intervention actually is, what it typically
+      moves, and roughly how long it takes to stand up.
+  - id: knowledge
+    name: Tribal knowledge capture
+    effort: 3
+    summary: Get what's in people's heads into something the whole team can query.
+    detail: >
+      PLACEHOLDER. Describe the intervention and the measurable outcome.
+  - id: scheduling
+    name: Scheduling and capacity
+    effort: 4
+    summary: Stop planning the week in a spreadsheet nobody trusts.
+    detail: >
+      PLACEHOLDER. Describe the intervention and the measurable outcome.
+  - id: quality
+    name: Quality and rework
+    effort: 3
+    summary: Catch the defect earlier, or stop causing it.
+    detail: >
+      PLACEHOLDER. Describe the intervention and the measurable outcome.
+  - id: admin
+    name: Repetitive admin
+    effort: 1
+    summary: The recurring hours nobody's job description mentions.
+    detail: >
+      PLACEHOLDER. Describe the intervention and the measurable outcome.
+  - id: customer
+    name: Customer experience
+    effort: 3
+    summary: What your customers feel between order and delivery.
+    detail: >
+      PLACEHOLDER. Describe the intervention and the measurable outcome.
+
+questions:
+  - id: q1
+    question: How long does a typical quote take to get out the door?
+    help: PLACEHOLDER QUESTION — replace with your own.
+    options:
+      - label: Under an hour
+        scores: { quoting: 0 }
+      - label: A day or so
+        scores: { quoting: 2, admin: 1 }
+      - label: Several days
+        scores: { quoting: 4, admin: 2 }
+      - label: Long enough that we lose work over it
+        scores: { quoting: 5, customer: 2 }
+
+  - id: q2
+    question: If your most experienced person left tomorrow, what would break?
+    help: PLACEHOLDER QUESTION — replace with your own.
+    options:
+      - label: Nothing — it's all documented
+        scores: { knowledge: 0 }
+      - label: We'd cope, slowly
+        scores: { knowledge: 2 }
+      - label: Quite a lot
+        scores: { knowledge: 4 }
+      - label: We genuinely don't know
+        scores: { knowledge: 5, quality: 1 }
+
+  - id: q3
+    question: How do you plan the week's work?
+    help: PLACEHOLDER QUESTION — replace with your own.
+    options:
+      - label: A system everyone trusts
+        scores: { scheduling: 0 }
+      - label: A spreadsheet one person owns
+        scores: { scheduling: 3, knowledge: 1 }
+      - label: A whiteboard and a conversation
+        scores: { scheduling: 4 }
+      - label: It changes daily and we react
+        scores: { scheduling: 5, customer: 1 }
+
+  - id: q4
+    question: How much of your week goes on work that repeats exactly?
+    help: PLACEHOLDER QUESTION — replace with your own.
+    options:
+      - label: Very little
+        scores: { admin: 0 }
+      - label: A few hours
+        scores: { admin: 2 }
+      - label: A day or more
+        scores: { admin: 4 }
+      - label: More than I want to admit
+        scores: { admin: 5 }
+
+  - id: q5
+    question: When something goes wrong, when do you usually find out?
+    help: PLACEHOLDER QUESTION — replace with your own.
+    options:
+      - label: Before it leaves us
+        scores: { quality: 0 }
+      - label: At final inspection
+        scores: { quality: 2 }
+      - label: When the customer tells us
+        scores: { quality: 5, customer: 3 }
+      - label: It varies too much to say
+        scores: { quality: 3 }
+
+  - id: q6
+    question: Can a customer find out where their order is without calling you?
+    help: PLACEHOLDER QUESTION — replace with your own.
+    options:
+      - label: Yes, self-serve
+        scores: { customer: 0 }
+      - label: They email and we reply
+        scores: { customer: 2, admin: 1 }
+      - label: They call, and we go and look
+        scores: { customer: 4, admin: 2 }
+      - label: We'd struggle to answer quickly
+        scores: { customer: 5, scheduling: 1 }
+---

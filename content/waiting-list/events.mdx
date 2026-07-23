@@ -1,0 +1,57 @@
+---
+title: Events Waiting List
+backLabel: "← Back to home"
+backHref: /
+intro: >
+  Workshops, livestreams and Coffee, Cake & Ai — in person across Wales, London
+  and Kent, and online. Join the list and I'll let you know what's coming up
+  near you.
+formHeading: Join the list
+submitLabel: Join the waiting list
+successMessage: You're on the list. I'll be in touch when the next one is announced.
+
+# Leave empty and the form opens a pre-filled email instead. See lib/waiting-list.js.
+formEndpoint: ""
+fallbackEmail: hello@simonwynne.com
+
+fields:
+  - name: name
+    label: Name
+    type: text
+    autocomplete: name
+    required: true
+  - name: email
+    label: Email
+    type: email
+    autocomplete: email
+    required: true
+    placeholder: you@company.com
+  - name: company
+    label: Company
+    type: text
+    autocomplete: organization
+    optional: true
+  - name: eventType
+    label: Which events interest you?
+    type: select
+    options:
+      - All Events
+      - Workshops
+      - LiveStreams
+      - "Coffee, Cake & Ai"
+  - name: region
+    label: Region
+    type: select
+    options:
+      - All Regions
+      - Wales
+      - London
+      - Kent
+  - name: eventUpdates
+    label: Email me when new events are announced
+    type: checkbox
+    defaultChecked: true
+  - name: newsletter
+    label: Also subscribe me to the newsletter
+    type: checkbox
+---
