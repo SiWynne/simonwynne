@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { createBooking, fetchSlots, visitorTimeZone } from "./cal-api";
+import { downloadIcs, googleCalendarUrl } from "./calendar-links";
 
-// NOTE ON AVAILABILITY
-// The site is a static export (`output: "export"`), so there is no server and
-// no database. Booked slots come from content/discovery-call/index.mdx and are
-// only as current as the last deploy — two people can book the same slot in
-// between. For real availability, swap this component for a booking service
-// (Cal.com, Calendly, SavvyCal) that owns the calendar.
+// AVAILABILITY
+// Cal.com owns the calendar. Availability is read live from its public API on
+// every page view and the booking is written straight back, so a slot stops
+// being offered the moment someone takes it — there is no local list to keep in
+// step and no window in which two people can book the same time. Cal also does
+// the timezone conversion: slots are requested in the visitor's own zone and
+// rendered exactly as returned.
 
 const FIELD_CLASSES =
   "w-full rounded-form border-2 border-neutral-darkest bg-transparent px-3 py-2 text-scheme-text transition-all duration-200 placeholder:text-neutral-darkest-60 hover:bg-neutral-darkest-5 focus-visible:ring-2 focus-visible:ring-neutral-darkest focus-visible:ring-offset-2 focus-visible:outline-none";
@@ -44,114 +47,92 @@ const MONTH_NAMES = [
 const pad = (n) => String(n).padStart(2, "0");
 const toDateKey = (date) =>
   `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-const toMinutes = (hhmm) => {
-  const [h, m] = hhmm.split(":").map(Number);
-  return h * 60 + m;
+const timeLabel = (iso) => {
+  const date = new Date(iso);
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
 };
-const fromMinutes = (mins) => `${pad(Math.floor(mins / 60))}:${pad(mins % 60)}`;
 
 /**
- * Weekdays from today to Friday of this week, then Monday–Friday of next week,
- * kept in separate weeks. Run on the client: computing at build time would
- * freeze the dates at deploy.
+ * The Monday that starts next week, and the end of that week. Used both to
+ * bound the request and to split the results into the two headed groups.
  */
-function buildDays(now) {
-  const dow = now.getDay(); // 0 Sun … 6 Sat
-  const addDays = (offset) => {
-    const date = new Date(now);
-    date.setDate(now.getDate() + offset);
-    return date;
-  };
+function weekBoundaries(now) {
+  const nextMonday = new Date(now);
+  // Strictly after today, so Monday itself looks a full week ahead.
+  const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
+  nextMonday.setDate(now.getDate() + daysUntilMonday);
+  nextMonday.setHours(0, 0, 0, 0);
 
-  const thisWeek = [];
-  const nextWeek = [];
-
-  // The week starts on Sunday, so Sunday's Monday–Friday are *this* week.
-  if (dow === 0) {
-    for (let i = 1; i <= 5; i++) thisWeek.push(addDays(i));
-    for (let i = 8; i <= 12; i++) nextWeek.push(addDays(i));
-    return { thisWeek, nextWeek };
-  }
-
-  // Saturday is the last day of the week — nothing left in it.
-  if (dow === 6) {
-    for (let i = 2; i <= 6; i++) nextWeek.push(addDays(i));
-    return { thisWeek, nextWeek };
-  }
-
-  // Mon–Fri: the rest of this week, then the whole of the next.
-  for (let d = dow; d <= 5; d++) thisWeek.push(addDays(d - dow));
-  const untilNextMonday = 8 - dow;
-  for (let i = 0; i < 5; i++) nextWeek.push(addDays(untilNextMonday + i));
-
-  return { thisWeek, nextWeek };
+  const endOfNextWeek = new Date(nextMonday);
+  endOfNextWeek.setDate(nextMonday.getDate() + 7);
+  return { nextMonday, endOfNextWeek };
 }
 
-const MIDDAY = 12 * 60;
+/** Cal's { "YYYY-MM-DD": [{ start, end }] } into the shape the markup wants. */
+function buildWeeks(slotsByDate, now) {
+  const { nextMonday } = weekBoundaries(now);
+  const nextMondayKey = toDateKey(nextMonday);
 
-function buildDay({ date, sessions, slotMinutes, bookedSet, now }) {
-  const dateKey = toDateKey(date);
   const todayKey = toDateKey(now);
   const tomorrow = new Date(now);
   tomorrow.setDate(now.getDate() + 1);
   const tomorrowKey = toDateKey(tomorrow);
 
-  const isToday = dateKey === todayKey;
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const dateLabel = `${DAY_NAMES[date.getDay()]} ${date.getDate()} ${MONTH_NAMES[date.getMonth()]}`;
+  const days = Object.keys(slotsByDate)
+    .sort()
+    .map((dateKey) => {
+      const entries = slotsByDate[dateKey] || [];
+      if (entries.length === 0) return null;
 
-  // Relative to today, whatever day of the week it is: today is "Today",
-  // the next calendar day is "Tomorrow", everything beyond is day + date.
-  let label = dateLabel;
-  if (isToday) label = "Today";
-  else if (dateKey === tomorrowKey) label = "Tomorrow";
+      // Parse from the slot itself rather than the key, so the day heading can
+      // never disagree with the times printed under it.
+      const date = new Date(entries[0].start);
+      const dateLabel = `${DAY_NAMES[date.getDay()]} ${date.getDate()} ${MONTH_NAMES[date.getMonth()]}`;
+      let label = dateLabel;
+      if (dateKey === todayKey) label = "Today";
+      else if (dateKey === tomorrowKey) label = "Tomorrow";
 
-  const am = [];
-  const pm = [];
-  for (const session of sessions) {
-    const start = toMinutes(session.start);
-    const end = toMinutes(session.end);
-    for (let t = start; t + slotMinutes <= end; t += slotMinutes) {
-      const startLabel = fromMinutes(t);
-      const slot = {
-        id: `${dateKey} ${startLabel}`,
+      const am = [];
+      const pm = [];
+      for (const entry of entries) {
+        const start = new Date(entry.start);
+        const slot = {
+          id: `${dateKey}T${entry.start}`,
+          start: entry.start,
+          end: entry.end || null,
+          dateKey,
+          dateLabel,
+          startLabel: timeLabel(entry.start),
+          endLabel: entry.end ? timeLabel(entry.end) : null,
+        };
+        (start.getHours() < 12 ? am : pm).push(slot);
+      }
+
+      return {
         dateKey,
+        label,
         dateLabel,
-        startLabel,
-        endLabel: fromMinutes(t + slotMinutes),
-        booked: bookedSet.has(`${dateKey} ${startLabel}`),
-        // Today's earlier slots are gone; treat them as unavailable.
-        past: isToday && t <= nowMinutes,
+        // Sub-label avoids losing the date when the heading says Today.
+        subLabel: label === dateLabel ? null : dateLabel,
+        periods: [
+          { id: "am", label: "AM", slots: am },
+          { id: "pm", label: "PM", slots: pm },
+        ].filter((period) => period.slots.length > 0),
       };
-      (t < MIDDAY ? am : pm).push(slot);
-    }
-  }
-
-  return {
-    dateKey,
-    label,
-    dateLabel,
-    // Sub-label avoids losing the date when the heading says Today/Tomorrow.
-    subLabel: label === dateLabel ? null : dateLabel,
-    periods: [
-      { id: "am", label: "AM", slots: am },
-      { id: "pm", label: "PM", slots: pm },
-    ].filter((period) => period.slots.length > 0),
-  };
-}
-
-function buildWeeks({ sessions, slotMinutes, booked, now }) {
-  const bookedSet = new Set(booked);
-  const { thisWeek, nextWeek } = buildDays(now);
-
-  const build = (dates) =>
-    dates.map((date) =>
-      buildDay({ date, sessions, slotMinutes, bookedSet, now }),
-    );
+    })
+    .filter(Boolean);
 
   return [
-    { id: "this-week", label: "This Week", days: build(thisWeek) },
-    { id: "next-week", label: "Next Week", days: build(nextWeek) },
+    {
+      id: "this-week",
+      label: "This Week",
+      days: days.filter((day) => day.dateKey < nextMondayKey),
+    },
+    {
+      id: "next-week",
+      label: "Next Week",
+      days: days.filter((day) => day.dateKey >= nextMondayKey),
+    },
   ].filter((week) => week.days.length > 0);
 }
 
@@ -176,28 +157,55 @@ export function BookingCalendar({
   submitLabel,
   successHeading,
   successMessage,
-  slotMinutes = 20,
-  sessions = [],
-  booked = [],
-  endpoint = "",
+  calUsername,
+  calEventSlug,
   fallbackEmail,
 }) {
-  // Rendered only after mount so the dates are the visitor's "now", not the
-  // build's. Avoids a hydration mismatch too.
-  const [now, setNow] = useState(null);
+  const [weeks, setWeeks] = useState([]);
+  // loading | ready | unavailable
+  const [loadState, setLoadState] = useState("loading");
+  const [timeZone, setTimeZone] = useState(null);
   const [selected, setSelected] = useState(null);
   const [values, setValues] = useState({ name: "", email: "", phone: "" });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("idle"); // idle | sending | booked | error
+  const [booking, setBooking] = useState(null);
+  const [failure, setFailure] = useState(null);
   const formRef = useRef(null);
   const panelRef = useRef(null);
 
-  useEffect(() => setNow(new Date()), []);
+  // Runs after mount, so "now" is the visitor's clock rather than the build's.
+  const load = useCallback(async () => {
+    setLoadState("loading");
+    const now = new Date();
+    const zone = visitorTimeZone();
+    setTimeZone(zone);
 
-  const weeks = useMemo(() => {
-    if (!now) return [];
-    return buildWeeks({ sessions, slotMinutes, booked, now });
-  }, [now, sessions, slotMinutes, booked]);
+    if (!calUsername || !calEventSlug) {
+      setFailure("This booking page isn't connected to a calendar yet.");
+      setLoadState("unavailable");
+      return;
+    }
+
+    try {
+      const slots = await fetchSlots({
+        username: calUsername,
+        eventSlug: calEventSlug,
+        start: now,
+        end: weekBoundaries(now).endOfNextWeek,
+        timeZone: zone,
+      });
+      setWeeks(buildWeeks(slots, now));
+      setLoadState("ready");
+    } catch (error) {
+      setFailure(error.message);
+      setLoadState("unavailable");
+    }
+  }, [calUsername, calEventSlug]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const setField = (field) => (event) => {
     setValues((prev) => ({ ...prev, [field]: event.target.value }));
@@ -205,7 +213,6 @@ export function BookingCalendar({
   };
 
   const chooseSlot = (slot) => {
-    if (slot.booked || slot.past) return;
     setSelected(slot);
     setStatus("idle");
     window.requestAnimationFrame(() => panelRef.current?.focus());
@@ -221,29 +228,24 @@ export function BookingCalendar({
       return;
     }
 
-    if (!endpoint) {
-      const subject = `Discovery call — ${selected.dateKey} ${selected.startLabel}`;
-      const body = [
-        `Slot: ${selected.dateKey}, ${selected.startLabel} to ${selected.endLabel}`,
-        `Name: ${values.name}`,
-        `Email: ${values.email}`,
-        `Phone: ${values.phone}`,
-      ].join("\n");
-      window.location.href = `mailto:${fallbackEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      setStatus("booked");
-      return;
-    }
-
     setStatus("sending");
     try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: new FormData(formRef.current),
-      });
-      if (!response.ok) throw new Error(String(response.status));
+      // Cal is authoritative on the confirmed times — keep what it returns
+      // rather than what was on screen, and use it for the calendar links.
+      setBooking(
+        await createBooking({
+          username: calUsername,
+          eventSlug: calEventSlug,
+          start: selected.start,
+          timeZone,
+          name: values.name.trim(),
+          email: values.email.trim(),
+          phone: values.phone.trim(),
+        }),
+      );
       setStatus("booked");
-    } catch {
+    } catch (error) {
+      setFailure(error.message);
       setStatus("error");
     }
   };
@@ -253,20 +255,62 @@ export function BookingCalendar({
     setValues({ name: "", email: "", phone: "" });
     setErrors({});
     setStatus("idle");
+    setBooking(null);
+    setFailure(null);
+  };
+
+  // Someone else may have taken a slot while this page sat open, so a fresh
+  // booking always refetches rather than trusting what is on screen.
+  const bookAnother = () => {
+    reset();
+    load();
   };
 
   if (status === "booked") {
+    const calendarEvent = {
+      title: booking?.title || "Discovery call — Simon Wynne",
+      start: booking?.start || selected?.start,
+      end: booking?.end || selected?.end,
+      uid: booking?.uid,
+      details: "Twenty minutes to talk through what you're working on.",
+    };
+    const canAddToCalendar = Boolean(calendarEvent.start && calendarEvent.end);
+
     return (
       <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-4 btn-light badge-alt">
         <div className="container">
           <div className="mx-auto w-full max-w-lg">
             <h2 className="mb-5 text-h3 font-bold md:mb-6">{successHeading}</h2>
             <p className="mb-3 text-medium font-semibold">
-              {selected?.dateLabel}, {selected?.startLabel} to{" "}
-              {selected?.endLabel}
+              {selected?.dateLabel}, {selected?.startLabel}
+              {selected?.endLabel ? ` to ${selected.endLabel}` : ""}
             </p>
             <p className="mb-8">{successMessage}</p>
-            <Button variant="secondary" type="button" onClick={reset}>
+
+            {canAddToCalendar && (
+              <div className="mb-8">
+                <p className="mb-3 font-semibold">Add it to your calendar</p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <a
+                    href={googleCalendarUrl(calendarEvent)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-form border-2 border-neutral-darkest px-4 py-2 font-semibold transition-all duration-200 hover:bg-neutral-darkest-5 focus-visible:ring-2 focus-visible:ring-neutral-darkest focus-visible:ring-offset-2 focus-visible:outline-none"
+                  >
+                    Google Calendar
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => downloadIcs(calendarEvent)}
+                    className="rounded-form border-2 border-neutral-darkest px-4 py-2 font-semibold transition-all duration-200 hover:bg-neutral-darkest-5 focus-visible:ring-2 focus-visible:ring-neutral-darkest focus-visible:ring-offset-2 focus-visible:outline-none"
+                  >
+                    Apple or Outlook (.ics)
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <Button variant="secondary" type="button" onClick={bookAnother}>
               Book another slot
             </Button>
           </div>
@@ -278,12 +322,38 @@ export function BookingCalendar({
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-4 btn-light badge-alt">
       <div className="container">
-        {!now ? (
+        {loadState === "loading" ? (
           <p className="text-medium">Loading available slots…</p>
+        ) : loadState === "unavailable" || weeks.length === 0 ? (
+          <div className="w-full max-w-lg">
+            <h2 className="mb-5 text-h3 font-bold md:mb-6">
+              {loadState === "unavailable"
+                ? "I can't load my calendar right now"
+                : "No slots free in the next two weeks"}
+            </h2>
+            <p className="mb-8">
+              Email me at{" "}
+              <a
+                href={`mailto:${fallbackEmail}`}
+                className="font-semibold underline underline-offset-4"
+              >
+                {fallbackEmail}
+              </a>{" "}
+              and I'll find you a time.
+            </p>
+            <Button variant="secondary" type="button" onClick={load}>
+              Try again
+            </Button>
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_24rem] lg:gap-16">
             <div>
-              <h2 className="mb-8 text-h3 font-bold md:mb-10">Choose a slot</h2>
+              <h2 className="mb-2 text-h3 font-bold">Choose a slot</h2>
+              {timeZone && (
+                <p className="mb-8 text-small md:mb-10">
+                  Times shown in your timezone ({timeZone.replace(/_/g, " ")}).
+                </p>
+              )}
 
               <div className="grid grid-cols-1 gap-12 md:gap-16">
                 {weeks.map((week) => (
@@ -299,96 +369,55 @@ export function BookingCalendar({
                         two days". auto-fit keeps a day at 20rem minimum, which
                         is the width its two slot columns need. */}
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-8 md:gap-10">
-                      {week.days.map((day) => {
-                        const allGone = day.periods.every((period) =>
-                          period.slots.every((s) => s.booked || s.past),
-                        );
-                        return (
-                          <div key={day.dateKey}>
-                            <h4 className="text-h6 font-bold">{day.label}</h4>
-                            {day.subLabel && (
-                              <p className="mb-4 text-small">{day.subLabel}</p>
-                            )}
-                            {!day.subLabel && <div className="mb-4" />}
+                      {week.days.map((day) => (
+                        <div key={day.dateKey}>
+                          <h4 className="text-h6 font-bold">{day.label}</h4>
+                          {day.subLabel ? (
+                            <p className="mb-4 text-small">{day.subLabel}</p>
+                          ) : (
+                            <div className="mb-4" />
+                          )}
 
-                            {allGone ? (
-                              <p className="text-small">
-                                No slots left this day.
-                              </p>
-                            ) : (
-                              // Below sm the day cards are already full width,
-                              // so AM and PM stack: full-width slot buttons
-                              // beat two cramped columns on a phone.
-                              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                {day.periods.map((period) => (
-                                  <div key={period.id}>
-                                    <p className="mb-2 text-small font-semibold">
-                                      {period.label}
-                                    </p>
-                                    <ul className="grid grid-cols-1 gap-2">
-                                      {period.slots.map((slot) => {
-                                        const unavailable =
-                                          slot.booked || slot.past;
-                                        const isSelected =
-                                          selected?.id === slot.id;
-                                        return (
-                                          <li
-                                            key={slot.id}
-                                            className="relative"
-                                          >
-                                            <button
-                                              type="button"
-                                              onClick={() => chooseSlot(slot)}
-                                              // aria-disabled, not disabled: a
-                                              // disabled button can't take focus,
-                                              // and unavailable slots must be
-                                              // focusable to reveal why.
-                                              aria-disabled={
-                                                unavailable || undefined
-                                              }
-                                              aria-pressed={
-                                                isSelected || undefined
-                                              }
-                                              // The visible label uses an en
-                                              // dash to stay inside the button
-                                              // at tight widths; the accessible
-                                              // name keeps the spoken wording.
-                                              aria-label={`${day.label}, ${slot.startLabel} to ${slot.endLabel}`}
-                                              className={`peer w-full rounded-form border-2 border-neutral-darkest px-2 py-2 text-center text-small whitespace-nowrap transition-all duration-200 focus-visible:ring-2 focus-visible:ring-neutral-darkest focus-visible:ring-offset-2 focus-visible:outline-none ${
-                                                unavailable
-                                                  ? "cursor-not-allowed border-neutral-darkest/30 text-scheme-text/40"
-                                                  : isSelected
-                                                    ? "bg-neutral-darkest text-white"
-                                                    : "hover:bg-neutral-darkest-5"
-                                              }`}
-                                            >
-                                              {slot.startLabel}&ndash;
-                                              {slot.endLabel}
-                                            </button>
-                                            {unavailable && (
-                                              <>
-                                                <span
-                                                  aria-hidden="true"
-                                                  className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-form bg-neutral-darkest text-small text-white opacity-0 transition-opacity duration-150 peer-hover:opacity-100 peer-focus:opacity-100"
-                                                >
-                                                  Unavailable
-                                                </span>
-                                                <span className="sr-only">
-                                                  Unavailable
-                                                </span>
-                                              </>
-                                            )}
-                                          </li>
-                                        );
-                                      })}
-                                    </ul>
-                                  </div>
-                                ))}
+                          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            {day.periods.map((period) => (
+                              <div key={period.id}>
+                                <p className="mb-2 text-small font-semibold">
+                                  {period.label}
+                                </p>
+                                <ul className="grid grid-cols-1 gap-2">
+                                  {period.slots.map((slot) => {
+                                    const isSelected = selected?.id === slot.id;
+                                    return (
+                                      <li key={slot.id}>
+                                        <button
+                                          type="button"
+                                          onClick={() => chooseSlot(slot)}
+                                          aria-pressed={isSelected || undefined}
+                                          // The visible label uses an en dash
+                                          // to stay inside the button at tight
+                                          // widths; the accessible name keeps
+                                          // the spoken wording.
+                                          aria-label={`${day.label}, ${slot.startLabel}${slot.endLabel ? ` to ${slot.endLabel}` : ""}`}
+                                          className={`w-full rounded-form border-2 border-neutral-darkest px-2 py-2 text-center text-small whitespace-nowrap transition-all duration-200 focus-visible:ring-2 focus-visible:ring-neutral-darkest focus-visible:ring-offset-2 focus-visible:outline-none ${
+                                            isSelected
+                                              ? "bg-neutral-darkest text-white"
+                                              : "hover:bg-neutral-darkest-5"
+                                          }`}
+                                        >
+                                          {slot.startLabel}
+                                          {slot.endLabel && (
+                                            <>&ndash;{slot.endLabel}</>
+                                          )}
+                                        </button>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
                               </div>
-                            )}
+                            ))}
                           </div>
-                        );
-                      })}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -407,12 +436,11 @@ export function BookingCalendar({
                 <>
                   <h2 className="mb-2 text-h5 font-bold">{formHeading}</h2>
                   <p className="mb-6 font-semibold">
-                    {selected.dateLabel}, {selected.startLabel} to{" "}
-                    {selected.endLabel}
+                    {selected.dateLabel}, {selected.startLabel}
+                    {selected.endLabel ? ` to ${selected.endLabel}` : ""}
                   </p>
 
                   <form ref={formRef} onSubmit={handleSubmit} noValidate>
-                    <input type="hidden" name="slot" value={selected.id} />
                     <div className="grid grid-cols-1 gap-5">
                       <div>
                         <label
@@ -528,8 +556,10 @@ export function BookingCalendar({
 
                       {status === "error" && (
                         <p className="text-small">
-                          Something went wrong. Email me at {fallbackEmail} and
-                          I'll book you in.
+                          That slot didn't go through
+                          {failure ? ` (${failure})` : ""}. It may have just
+                          been taken — pick another, or email me at{" "}
+                          {fallbackEmail}.
                         </p>
                       )}
                     </div>

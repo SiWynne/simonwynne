@@ -16,11 +16,14 @@ export default function Page() {
 
   return (
     <div>
+      {/* Sits under Services in the hierarchy, so its back link stays put
+          rather than following the visitor's history. */}
       <HeaderAreas
         title={title}
         intro={intro}
         backLabel={backLabel}
         backHref={backHref}
+        historyBack={false}
       />
       <ServiceAreasList regions={regions} />
       {cta && (

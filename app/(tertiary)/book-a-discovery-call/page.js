@@ -24,10 +24,8 @@ export default function Page() {
         submitLabel={call.submitLabel}
         successHeading={call.successHeading}
         successMessage={call.successMessage}
-        slotMinutes={call.slotMinutes}
-        sessions={call.sessions}
-        booked={call.booked}
-        endpoint={call.formEndpoint}
+        calUsername={call.calUsername}
+        calEventSlug={call.calEventSlug}
         fallbackEmail={call.fallbackEmail}
       />
     </div>
