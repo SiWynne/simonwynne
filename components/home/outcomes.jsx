@@ -38,15 +38,13 @@ const useHover = () => {
   };
 };
 
-export function Portfolio22({ caseStudies = [] }) {
+export function Outcomes({ heading = "", caseStudies = [] }) {
   const hoverState = useHover();
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-3 badge-alt alternate logo-alt">
       <div className="container">
         <div className="mb-12 max-w-lg md:mb-18 lg:mb-20">
-          <h2 className="text-h2 font-bold">
-            Some Outcomes achieved for Customers
-          </h2>
+          <h2 className="text-h2 font-bold">{heading}</h2>
         </div>
         <div className="lg:grid-auto-cols-fr relative block lg:grid lg:grid-cols-2 lg:items-start">
           <div
