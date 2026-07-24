@@ -9,12 +9,14 @@ import { Blog34 } from "@/components/home/blog-34";
 import { Event27 } from "@/components/home/event-27";
 import { Contact17 } from "@/components/home/contact-17";
 import { getAllCaseStudies, getWorkSection } from "@/lib/work";
+import { getPostsBySlugs } from "@/lib/blog";
 import {
   getHero,
   getEvents,
   getToolkitsAndPlaybooks,
   getVideos,
   getLogoCarousel,
+  getBlog,
 } from "@/lib/home";
 
 export default function Page() {
@@ -25,6 +27,8 @@ export default function Page() {
   const logoCarousel = getLogoCarousel();
   const workSection = getWorkSection();
   const caseStudies = getAllCaseStudies();
+  const blog = getBlog();
+  const blogPosts = getPostsBySlugs(blog.featured);
 
   return (
     <div>
@@ -50,7 +54,13 @@ export default function Page() {
         cards={toolkits.cards}
       />
       <Outcomes heading={workSection.heading} caseStudies={caseStudies} />
-      <Blog34 />
+      <Blog34
+        heading={blog.heading}
+        subtitle={blog.subtitle}
+        buttonLabel={blog.buttonLabel}
+        buttonHref={blog.buttonHref}
+        posts={blogPosts}
+      />
       <Event27
         heading={videos.heading}
         subtitle={videos.subtitle}
