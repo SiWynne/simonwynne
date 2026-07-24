@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createBooking, fetchSlots, visitorTimeZone } from "./cal-api";
 import { downloadIcs, googleCalendarUrl } from "./calendar-links";
+import { filterAvailability } from "./availability";
 
 // AVAILABILITY
 // Cal.com owns the calendar. Availability is read live from its public API on
@@ -70,8 +71,11 @@ function weekBoundaries(now) {
 
 /** Cal's { "YYYY-MM-DD": [{ start, end }] } into the shape the markup wants. */
 function buildWeeks(slotsByDate, now) {
-  const { nextMonday } = weekBoundaries(now);
+  const { nextMonday, endOfNextWeek } = weekBoundaries(now);
   const nextMondayKey = toDateKey(nextMonday);
+  // Cal treats the request's end date as inclusive, so the Monday that opens
+  // the week after next can slip in. Bound the groups to drop it.
+  const weekAfterKey = toDateKey(endOfNextWeek);
 
   const todayKey = toDateKey(now);
   const tomorrow = new Date(now);
@@ -131,7 +135,9 @@ function buildWeeks(slotsByDate, now) {
     {
       id: "next-week",
       label: "Next Week",
-      days: days.filter((day) => day.dateKey >= nextMondayKey),
+      days: days.filter(
+        (day) => day.dateKey >= nextMondayKey && day.dateKey < weekAfterKey,
+      ),
     },
   ].filter((week) => week.days.length > 0);
 }
@@ -159,6 +165,7 @@ export function BookingCalendar({
   successMessage,
   calUsername,
   calEventSlug,
+  availability,
   fallbackEmail,
 }) {
   const [weeks, setWeeks] = useState([]);
@@ -195,13 +202,15 @@ export function BookingCalendar({
         end: weekBoundaries(now).endOfNextWeek,
         timeZone: zone,
       });
-      setWeeks(buildWeeks(slots, now));
+      // The fetch window already limits this to the rest of this week and next;
+      // the filter trims each day to the offered windows and weekdays.
+      setWeeks(buildWeeks(filterAvailability(slots, availability), now));
       setLoadState("ready");
     } catch (error) {
       setFailure(error.message);
       setLoadState("unavailable");
     }
-  }, [calUsername, calEventSlug]);
+  }, [calUsername, calEventSlug, availability]);
 
   useEffect(() => {
     load();

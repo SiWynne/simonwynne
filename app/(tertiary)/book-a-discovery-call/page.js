@@ -26,6 +26,7 @@ export default function Page() {
         successMessage={call.successMessage}
         calUsername={call.calUsername}
         calEventSlug={call.calEventSlug}
+        availability={call.availability}
         fallbackEmail={call.fallbackEmail}
       />
     </div>

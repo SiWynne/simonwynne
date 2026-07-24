@@ -23,11 +23,27 @@ successMessage: >
 # cal.com/simon-wynne/discovery-call then the username is "simon-wynne" and the
 # event slug is "discovery-call".
 #
-# Slot length, working hours, buffers and minimum notice are all set in Cal, not
-# here — this page renders whatever Cal says is bookable.
+# Slot length, buffers and minimum notice are all set in Cal, not here — this
+# page renders whatever Cal says is bookable, then narrows it with the windows
+# below.
 # ─────────────────────────────────────────────────────────────────────────────
 calUsername: "simon-wynne-kemtll"
 calEventSlug: "20-minute-discovery-call"
+
+# Which of Cal's slots to actually offer. Cal's schedule can be wider; the page
+# only surfaces slots that fall fully inside one of these windows, on weekdays,
+# for the rest of this week and next.
+#
+# Times are wall-clock in `timeZone`, so 10:00 stays 10:00 across the GMT/BST
+# switch. Quote them — an unquoted 10:00 is misread as a number in YAML.
+availability:
+  timeZone: Europe/London
+  weekdaysOnly: true
+  windows:
+    - start: "10:00"
+      end: "11:00"
+    - start: "15:00"
+      end: "16:00"
 
 fallbackEmail: hello@simonwynne.com
 ---
