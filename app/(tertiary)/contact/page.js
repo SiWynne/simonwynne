@@ -10,8 +10,16 @@ export function generateMetadata() {
 }
 
 export default function Page() {
-  const { title, intro, backLabel, backHref, formEndpoint, enquiryTypes, methods } =
-    getContact();
+  const {
+    title,
+    intro,
+    backLabel,
+    backHref,
+    formHeading,
+    formEndpoint,
+    enquiryTypes,
+    methods,
+  } = getContact();
 
   const emailMethod = methods.find((method) => method.icon === "mail");
 
@@ -24,6 +32,7 @@ export default function Page() {
         backHref={backHref}
       />
       <ContactForm
+        heading={formHeading}
         endpoint={formEndpoint}
         fallbackEmail={emailMethod?.value}
         enquiryTypes={enquiryTypes}

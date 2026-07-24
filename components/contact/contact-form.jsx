@@ -40,7 +40,12 @@ function buildMailto(email, values) {
   return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
-export function ContactForm({ endpoint = "", fallbackEmail, enquiryTypes = [] }) {
+export function ContactForm({
+  heading = "Send me a message",
+  endpoint = "",
+  fallbackEmail,
+  enquiryTypes = [],
+}) {
   const id = useId();
   const formRef = useRef(null);
   const [values, setValues] = useState(EMPTY);
@@ -92,7 +97,7 @@ export function ContactForm({ endpoint = "", fallbackEmail, enquiryTypes = [] })
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-4 btn-light badge-alt">
       <div className="container">
         <div className="mx-auto w-full max-w-lg">
-          <h2 className="mb-5 text-h3 font-bold md:mb-6">Send me a message</h2>
+          <h2 className="mb-5 text-h3 font-bold md:mb-6">{heading}</h2>
 
           <form ref={formRef} onSubmit={handleSubmit} noValidate>
             <div className="grid grid-cols-1 gap-5 md:gap-6">

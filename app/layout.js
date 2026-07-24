@@ -1,4 +1,5 @@
 import "./globals.css";
+import { RouteMemory } from "@/components/route-memory";
 
 export const metadata = {
   title: "SimonWynne",
@@ -11,7 +12,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <RouteMemory />
+        {children}
+      </body>
     </html>
   );
 }

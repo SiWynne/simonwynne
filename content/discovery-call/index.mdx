@@ -1,0 +1,33 @@
+---
+title: Book a Discovery Call
+backLabel: "← Back to home"
+backHref: /
+intro: >
+  Twenty minutes, no charge, no pitch. Tell me what you're working on and I'll
+  tell you honestly whether I can help. Pick a slot that suits you.
+
+formHeading: Confirm your slot
+submitLabel: Book this slot
+successHeading: You're booked
+successMessage: >
+  I've sent a calendar invite and a short note about what to have to hand. If
+  anything changes, use the reschedule link in that email.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Cal.com owns availability. These two values are the whole configuration: the
+# page reads live slots from Cal's public API and writes bookings back to it, so
+# a slot disappears the moment it is taken and the booking lands in the Google
+# Calendar connected to that Cal account.
+#
+# Both come from the event type's public link. If that link is
+# cal.com/simon-wynne/discovery-call then the username is "simon-wynne" and the
+# event slug is "discovery-call".
+#
+# Slot length, working hours, buffers and minimum notice are all set in Cal, not
+# here — this page renders whatever Cal says is bookable.
+# ─────────────────────────────────────────────────────────────────────────────
+calUsername: "simon-wynne-kemtll"
+calEventSlug: "20-minute-discovery-call"
+
+fallbackEmail: hello@simonwynne.com
+---
