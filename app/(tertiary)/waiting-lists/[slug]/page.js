@@ -2,7 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { HeaderAreas } from "@/components/service-areas/header-areas";
 import { SignupForm } from "@/components/forms/signup-form";
-import { getAllWaitingLists, getWaitingListBySlug } from "@/lib/waiting-list";
+import { getAllWaitingLists, getWaitingListBySlug } from "@/lib/waiting-lists";
 
 export function generateStaticParams() {
   return getAllWaitingLists().map(({ slug }) => ({ slug }));

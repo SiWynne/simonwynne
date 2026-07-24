@@ -4,6 +4,7 @@ import { ServiceAreasList } from "@/components/service-areas/service-areas-list"
 import { CtaAreas } from "@/components/service-areas/cta-areas";
 import { LogoCarousel } from "@/components/shared/logo-carousel";
 import { getServiceAreas } from "@/lib/service-areas";
+import { getLogoCarousel } from "@/lib/home";
 
 export function generateMetadata() {
   const { title, intro } = getServiceAreas();
@@ -13,6 +14,7 @@ export function generateMetadata() {
 export default function Page() {
   const { title, intro, backLabel, backHref, regions, cta } =
     getServiceAreas();
+  const logoCarousel = getLogoCarousel();
 
   return (
     <div>
@@ -34,7 +36,7 @@ export default function Page() {
           buttonHref={cta.buttonHref}
         />
       )}
-      <LogoCarousel />
+      <LogoCarousel heading={logoCarousel.heading} logos={logoCarousel.logos} />
     </div>
   );
 }

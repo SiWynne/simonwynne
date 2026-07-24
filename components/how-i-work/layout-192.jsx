@@ -1,42 +1,31 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
+import { SectionButtons } from "@/components/how-i-work/section-buttons";
 import React from "react";
-import { ChevronRight } from "relume-icons";
 
-export function Layout192() {
+export function Layout192({
+  heading = "",
+  intro = "",
+  image = "",
+  imageAlt = "",
+  buttons = [],
+}) {
   return (
     <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-3 badge-alt alternate logo-alt">
       <div className="container">
         <div className="grid grid-cols-1 gap-y-12 md:grid-cols-2 md:items-center md:gap-x-12 lg:gap-x-20">
           <div className="order-2 md:order-1">
             <img
-              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+              src={image}
               className="w-full rounded-image object-cover"
-              alt="Relume placeholder image"
+              alt={imageAlt}
             />
           </div>
           <div className="order-1 lg:order-2">
-            <h2 className="mb-5 text-h2 font-bold md:mb-6">
-              Transparency and accountability at every turn
-            </h2>
-            <p className="text-medium">
-              I believe in honest communication and measurable progress. You'll
-              always know where things stand and what comes next.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-4 md:mt-8">
-              <Button title="Explore" variant="secondary">
-                Explore
-              </Button>
-              <Button
-                title="Arrow"
-                variant="link"
-                size="link"
-                iconRight={<ChevronRight className="text-scheme-text" />}
-              >
-                Arrow
-              </Button>
-            </div>
+            <h2 className="mb-5 text-h2 font-bold md:mb-6">{heading}</h2>
+            <p className="text-medium">{intro}</p>
+            <SectionButtons
+              buttons={buttons}
+              className="mt-6 flex flex-wrap gap-4 md:mt-8"
+            />
           </div>
         </div>
       </div>
