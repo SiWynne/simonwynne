@@ -54,28 +54,42 @@ const timeLabel = (iso) => {
 };
 
 /**
- * The Monday that starts next week, and the end of that week. Used both to
- * bound the request and to split the results into the two headed groups.
+ * The two Mondays that anchor the "This Week" / "Next Week" split, and the end
+ * of the horizon. Used both to bound the request and to group the results.
+ *
+ * The week rolls over at midnight on Saturday, not Monday: Monday–Friday,
+ * "This Week" is the current calendar week; once Saturday begins — after the
+ * week's slots are spent — it rolls forward so the coming Monday–Friday become
+ * "This Week". So on a Saturday or Sunday there is no stale, empty current
+ * week; the upcoming week is shown instead.
  */
 function weekBoundaries(now) {
-  const nextMonday = new Date(now);
-  // Strictly after today, so Monday itself looks a full week ahead.
-  const daysUntilMonday = (8 - now.getDay()) % 7 || 7;
-  nextMonday.setDate(now.getDate() + daysUntilMonday);
-  nextMonday.setHours(0, 0, 0, 0);
+  const dow = now.getDay(); // 0 Sun … 6 Sat
+  let offsetToMonday;
+  if (dow === 0) offsetToMonday = 1; // Sunday → tomorrow's Monday
+  else if (dow === 6) offsetToMonday = 2; // Saturday → Monday
+  else offsetToMonday = 1 - dow; // Mon–Fri → this week's Monday
 
-  const endOfNextWeek = new Date(nextMonday);
-  endOfNextWeek.setDate(nextMonday.getDate() + 7);
-  return { nextMonday, endOfNextWeek };
+  const thisWeekMonday = new Date(now);
+  thisWeekMonday.setDate(now.getDate() + offsetToMonday);
+  thisWeekMonday.setHours(0, 0, 0, 0);
+
+  const nextWeekMonday = new Date(thisWeekMonday);
+  nextWeekMonday.setDate(thisWeekMonday.getDate() + 7);
+
+  const horizonEnd = new Date(thisWeekMonday);
+  horizonEnd.setDate(thisWeekMonday.getDate() + 14);
+
+  return { thisWeekMonday, nextWeekMonday, horizonEnd };
 }
 
 /** Cal's { "YYYY-MM-DD": [{ start, end }] } into the shape the markup wants. */
 function buildWeeks(slotsByDate, now) {
-  const { nextMonday, endOfNextWeek } = weekBoundaries(now);
-  const nextMondayKey = toDateKey(nextMonday);
+  const { nextWeekMonday, horizonEnd } = weekBoundaries(now);
+  const nextWeekMondayKey = toDateKey(nextWeekMonday);
   // Cal treats the request's end date as inclusive, so the Monday that opens
-  // the week after next can slip in. Bound the groups to drop it.
-  const weekAfterKey = toDateKey(endOfNextWeek);
+  // the week beyond the horizon can slip in. Bound the groups to drop it.
+  const horizonEndKey = toDateKey(horizonEnd);
 
   const todayKey = toDateKey(now);
   const tomorrow = new Date(now);
@@ -130,13 +144,14 @@ function buildWeeks(slotsByDate, now) {
     {
       id: "this-week",
       label: "This Week",
-      days: days.filter((day) => day.dateKey < nextMondayKey),
+      days: days.filter((day) => day.dateKey < nextWeekMondayKey),
     },
     {
       id: "next-week",
       label: "Next Week",
       days: days.filter(
-        (day) => day.dateKey >= nextMondayKey && day.dateKey < weekAfterKey,
+        (day) =>
+          day.dateKey >= nextWeekMondayKey && day.dateKey < horizonEndKey,
       ),
     },
   ].filter((week) => week.days.length > 0);
@@ -199,7 +214,7 @@ export function BookingCalendar({
         username: calUsername,
         eventSlug: calEventSlug,
         start: now,
-        end: weekBoundaries(now).endOfNextWeek,
+        end: weekBoundaries(now).horizonEnd,
         timeZone: zone,
       });
       // The fetch window already limits this to the rest of this week and next;
