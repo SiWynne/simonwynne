@@ -72,7 +72,10 @@ export function Footer1() {
             </p>
             <div className="w-full max-w-md">
               {formState.status === "subscribed" ? (
-                <p className="mb-3 font-semibold" aria-live="polite">
+                <p
+                  className="mb-3 inline-block bg-milan px-4 py-2 font-semibold text-neutral-darkest"
+                  aria-live="polite"
+                >
                   Thanks for subscribing — please check your inbox to confirm.
                 </p>
               ) : (
