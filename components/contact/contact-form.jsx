@@ -239,11 +239,19 @@ export function ContactForm({
                 <Button type="submit" disabled={status === "sending"}>
                   {status === "sending" ? "Sending…" : "Send message"}
                 </Button>
-                <p aria-live="polite" className="text-small">
-                  {status === "sent" && "Thanks — I'll be in touch within two working days."}
-                  {status === "error" &&
-                    `Something went wrong. Email me directly at ${fallbackEmail}.`}
-                </p>
+                {status === "sent" && (
+                  <p
+                    aria-live="polite"
+                    className="inline-block bg-milan px-4 py-2 font-semibold text-neutral-darkest"
+                  >
+                    Thanks — I'll be in touch within two working days.
+                  </p>
+                )}
+                {status === "error" && (
+                  <p aria-live="polite" className="text-small">
+                    Something went wrong. Email me directly at {fallbackEmail}.
+                  </p>
+                )}
               </div>
             </div>
           </form>
