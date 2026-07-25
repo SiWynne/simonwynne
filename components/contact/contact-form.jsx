@@ -80,10 +80,24 @@ export function ContactForm({
     try {
       const response = await fetch(endpoint, {
         method: "POST",
-        headers: { Accept: "application/json" },
-        body: new FormData(formRef.current),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name.trim(),
+          email: values.email.trim(),
+          company: values.company.trim(),
+          enquiry: values.enquiry,
+          message: values.message.trim(),
+          _gotcha:
+            formRef.current?.querySelector('[name="_gotcha"]')?.value || "",
+        }),
       });
-      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+      const result = await response.json().catch(() => null);
+      if (!response.ok || !result?.success) {
+        throw new Error(`Request failed: ${response.status}`);
+      }
       setStatus("sent");
       setValues(EMPTY);
     } catch {
@@ -100,6 +114,16 @@ export function ContactForm({
           <h2 className="mb-5 text-h3 font-bold md:mb-6">{heading}</h2>
 
           <form ref={formRef} onSubmit={handleSubmit} noValidate>
+            {/* Honeypot: hidden from people, tempting to bots. The mail
+                handler drops any submission where it's filled in. */}
+            <input
+              type="text"
+              name="_gotcha"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ display: "none" }}
+            />
             <div className="grid grid-cols-1 gap-5 md:gap-6">
               <div>
                 <label htmlFor={`${id}-name`} className="mb-2 block font-semibold">

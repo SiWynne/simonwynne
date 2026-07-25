@@ -7,12 +7,12 @@ intro: >
   message myself and reply within two working days.
 formHeading: "Let's Talk about You. Start the Conversation…"
 
-# Where the form sends. Leave empty and the form falls back to opening a
-# pre-filled email instead — no third-party account needed to launch.
-# To collect submissions properly, paste a Formspree (or similar) endpoint
-# here, e.g. https://formspree.io/f/xxxxxxxx
-# The site is a static export, so there is no server-side handler.
-formEndpoint: ""
+# The form POSTs (as JSON) to our own small mail handler — a separate Hostinger
+# Node app (see ../../contact-api), which sends the notification to us and the
+# confirmation to the sender, both through the hello@ mailbox. Paste the
+# deployed URL below to switch it on; until then the form falls back to opening
+# a pre-filled email.
+formEndpoint: https://contact-api.simonwynne.com/contact
 
 # What the enquiry dropdown offers. Order matters.
 enquiryTypes:
