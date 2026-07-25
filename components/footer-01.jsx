@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   FacebookLogo,
   InstagramLogo,
@@ -10,25 +10,51 @@ import {
   XLogo,
   YoutubeLogo,
 } from "relume-icons";
+import { isValidEmail, subscribeToNewsletter } from "@/lib/newsletter";
 
-const useForm = () => {
+const useNewsletter = () => {
   const [email, setEmail] = useState("");
+  // idle | sending | subscribed | error
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState("");
+  const formRef = useRef(null);
+
   const handleSetEmail = (event) => {
     setEmail(event.target.value);
+    if (status === "error") setStatus("idle");
   };
-  const handleSubmit = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log({ email });
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      setStatus("error");
+      return;
+    }
+    // Honeypot filled = bot. Pretend success and send nothing.
+    if (formRef.current?.querySelector('[name="website"]')?.value) {
+      setStatus("subscribed");
+      return;
+    }
+
+    setStatus("sending");
+    setError("");
+    try {
+      await subscribeToNewsletter(email);
+      setStatus("subscribed");
+      setEmail("");
+    } catch {
+      setError("Something went wrong — please try again.");
+      setStatus("error");
+    }
   };
-  return {
-    email,
-    handleSetEmail,
-    handleSubmit,
-  };
+
+  return { email, status, error, formRef, handleSetEmail, handleSubmit };
 };
 
 export function Footer1() {
-  const formState = useForm();
+  const formState = useNewsletter();
   return (
     <footer className="px-[5%] py-12 md:py-18 lg:py-20 scheme-2 badge-alt alternate logo-alt">
       <div className="container">
@@ -45,21 +71,52 @@ export function Footer1() {
               Stay informed with the latest updates and insights.
             </p>
             <div className="w-full max-w-md">
-              <form
-                className="mb-3 grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-[1fr_max-content] md:gap-y-4"
-                onSubmit={formState.handleSubmit}
-              >
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Your email address"
-                  value={formState.email}
-                  onChange={formState.handleSetEmail}
-                />
-                <Button title="Subscribe" variant="secondary" size="sm">
-                  Subscribe
-                </Button>
-              </form>
+              {formState.status === "subscribed" ? (
+                <p className="mb-3 font-semibold" aria-live="polite">
+                  Thanks for subscribing — please check your inbox to confirm.
+                </p>
+              ) : (
+                <form
+                  ref={formState.formRef}
+                  className="mb-3 grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-[1fr_max-content] md:gap-y-4"
+                  onSubmit={formState.handleSubmit}
+                  noValidate
+                >
+                  {/* Honeypot — hidden from people, tempting to bots. */}
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    style={{ display: "none" }}
+                  />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="Your email address"
+                    value={formState.email}
+                    onChange={formState.handleSetEmail}
+                    aria-invalid={formState.status === "error" || undefined}
+                  />
+                  <Button
+                    title="Subscribe"
+                    variant="secondary"
+                    size="sm"
+                    type="submit"
+                    disabled={formState.status === "sending"}
+                  >
+                    {formState.status === "sending" ? "Subscribing…" : "Subscribe"}
+                  </Button>
+                </form>
+              )}
+              {formState.status === "error" && (
+                <p className="mb-3 text-small" aria-live="polite">
+                  {formState.error}
+                </p>
+              )}
               <p className="text-tiny">
                 By subscribing you agree to our Privacy Policy and consent to
                 receive updates.
