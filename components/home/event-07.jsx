@@ -34,7 +34,7 @@ export function Event7({
                   className="absolute size-full rounded-image object-cover"
                 />
                 {card.date && (
-                  <div className="absolute top-4 right-4 flex min-w-28 flex-col items-center rounded-card bg-scheme-foreground px-1 py-3 text-small text-scheme-text">
+                  <div className="absolute top-4 right-4 flex min-w-28 flex-col items-center rounded-card bg-milan px-1 py-3 text-small text-neutral-darkest">
                     {card.date.top && <span>{card.date.top}</span>}
                     {card.date.number && (
                       <h4 className="text-h4 font-bold">{card.date.number}</h4>
