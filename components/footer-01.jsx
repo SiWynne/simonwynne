@@ -68,7 +68,8 @@ export function Footer1() {
               />
             </a>
             <p className="mb-5 md:mb-6">
-              Stay informed with the latest updates and insights.
+              Stay informed of Events, News &amp; Insights. Subscribe to my
+              email Newsletter.
             </p>
             <div className="w-full max-w-md">
               {formState.status === "subscribed" ? (
