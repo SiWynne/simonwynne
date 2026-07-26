@@ -123,7 +123,20 @@ export function Navbar1() {
               size="sm"
               className="w-full"
             >
-              <Link href="#newsletter" onClick={useActive.closeMobileMenu}>
+              <Link
+                href="#newsletter"
+                onClick={(event) => {
+                  useActive.closeMobileMenu();
+                  const target = document.getElementById("newsletter");
+                  if (target) {
+                    // Scroll explicitly: clicking a link to the hash the URL
+                    // already has won't re-trigger the browser's own scroll.
+                    event.preventDefault();
+                    target.scrollIntoView({ behavior: "smooth" });
+                    window.history.replaceState(null, "", "#newsletter");
+                  }
+                }}
+              >
                 Subscribe to my Newsletter
               </Link>
             </Button>
