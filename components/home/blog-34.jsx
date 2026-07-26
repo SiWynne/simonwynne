@@ -41,7 +41,11 @@ export function Blog34({
                   />
                 </Link>
                 <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  {post.category && <Badge className="mr-4">{post.category}</Badge>}
+                  {post.category && (
+                    <Badge variant="outline" className="mr-4 border-2">
+                      {post.category}
+                    </Badge>
+                  )}
                   <p className="inline text-small font-semibold">
                     {post.readTime} min read
                   </p>
@@ -51,14 +55,14 @@ export function Blog34({
                 </Link>
                 <p>{post.excerpt}</p>
                 <Button
-                  title="Read"
+                  title="Full Article"
                   variant="link"
                   size="link"
                   iconRight={<ChevronRight className="text-scheme-text" />}
                   asChild
                   className="mt-5 flex items-center justify-center gap-x-2 md:mt-6"
                 >
-                  <Link href={href}>Read</Link>
+                  <Link href={href}>Full Article</Link>
                 </Button>
               </div>
             );

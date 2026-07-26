@@ -47,7 +47,9 @@ export function Event7({
               <a href={card.href || "#"}>
                 <h2 className="text-h5 font-bold">{card.title}</h2>
               </a>
-              {card.location && <p className="mb-2">{card.location}</p>}
+              {card.location && (
+                <p className="mb-2 font-bold">{card.location}</p>
+              )}
               <p>{card.description}</p>
               <Button
                 title="Register"

@@ -71,7 +71,15 @@ export function Outcomes({ heading = "", caseStudies = [] }) {
                     <h3 className={hoverState.getHeadingClassNames(index)}>
                       {study.title}
                     </h3>
-                    <Badge>{study.category}</Badge>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {study.category
+                        ?.split(",")
+                        .map((category) => category.trim())
+                        .filter(Boolean)
+                        .map((category) => (
+                          <Badge key={category}>{category}</Badge>
+                        ))}
+                    </div>
                   </div>
                 </Link>
               </div>

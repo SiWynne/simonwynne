@@ -38,21 +38,21 @@ export function Portfolio11({
               {card.badges?.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2 md:mt-4">
                   {card.badges.map((badge, i) => (
-                    <Badge key={i}>
+                    <Badge key={i} variant="outline" className="border-2">
                       <a href={card.href || "#"}>{badge}</a>
                     </Badge>
                   ))}
                 </div>
               )}
               <Button
-                title="Read more"
+                title="Read More"
                 variant="link"
                 size="link"
                 iconRight={<ChevronRight className="text-scheme-text" />}
                 asChild
-                className="mt-5 md:mt-6"
+                className="mt-2 md:mt-3"
               >
-                <a href={card.href || "#"}>Read more</a>
+                <a href={card.href || "#"}>Read More</a>
               </Button>
             </article>
           ))}
