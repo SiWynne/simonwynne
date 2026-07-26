@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -26,6 +26,7 @@ const useRelume = () => {
     ? ["open", "rotatePhase"]
     : "closed";
   return {
+    isMobileMenuOpen,
     toggleMobileMenu,
     closeMobileMenu,
     animateMobileMenu,
@@ -33,10 +34,24 @@ const useRelume = () => {
   };
 };
 
+const scrollToNewsletter = () => {
+  const target = document.getElementById("newsletter");
+  if (!target) return;
+  // Instant, not smooth — a smooth animation targets a position that shifts
+  // as below-the-fold content settles on first load, so it stops short.
+  target.scrollIntoView();
+  window.history.replaceState(null, "", "#newsletter");
+};
+
 export function Navbar1() {
   const useActive = useRelume();
   const pathname = usePathname();
   const isActivePath = (href) => normalizePath(pathname) === normalizePath(href);
+  // On mobile the Subscribe CTA lives inside the collapsing menu. Scrolling
+  // while the menu is still open (or mid-collapse) lands short: the shrinking
+  // menu shifts the footer up after the scroll position is computed. Defer the
+  // scroll until the close animation finishes via onAnimationComplete below.
+  const scrollAfterCloseRef = useRef(false);
   return (
     <section className="z-[999] flex w-full items-center bg-scheme-background lg:min-h-18 lg:px-[5%] scheme-1 btn-light badge-alt">
       <div className="size-full lg:flex lg:items-center lg:justify-between">
@@ -91,60 +106,72 @@ export function Navbar1() {
             />
           </button>
         </div>
-        <motion.div
-          variants={{
-            open: { height: "var(--height-open, auto)" },
-            close: { height: "var(--height-closed, 0)" },
+        {/* Collapse via a CSS grid-template-rows 0fr→1fr transition: no height
+            measurement, so it can't land on a stale/partial height the way
+            animating to `auto` does, and unlike motion it reliably runs to
+            completion. On desktop lg:flex takes over and the grid rows are
+            ignored. */}
+        <div
+          onTransitionEnd={() => {
+            // scrollAfterCloseRef is only ever set right before a close, so the
+            // menu has now finished collapsing and the footer has settled into
+            // its final position — safe to scroll without landing short.
+            if (scrollAfterCloseRef.current) {
+              scrollAfterCloseRef.current = false;
+              scrollToNewsletter();
+            }
           }}
-          initial="close"
-          exit="close"
-          animate={useActive.animateMobileMenu}
-          transition={{ duration: 0.4 }}
-          className="overflow-hidden px-[5%] lg:flex lg:items-center lg:overflow-visible lg:px-0 lg:[--height-closed:auto] lg:[--height-open:auto]"
+          className={cn(
+            "grid px-[5%] transition-[grid-template-rows] duration-300 ease-in-out lg:flex lg:items-center lg:px-0",
+            useActive.isMobileMenuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          )}
         >
-          {NAV_LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={useActive.closeMobileMenu}
-              className={cn(
-                "block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2",
-                isActivePath(href) && "lg:bg-milan",
-              )}
-            >
-              {label}
-            </Link>
-          ))}
-          <div className="mt-6 flex flex-col items-center gap-4 lg:mt-0 lg:ml-4 lg:flex-row">
-            <Button
-              asChild
-              title="Subscribe to my Newsletter"
-              variant="secondary"
-              size="sm"
-              className="w-full"
-            >
+          {/* lg:contents dissolves this wrapper on desktop so the links and CTA
+              become direct flex children of the row above. */}
+          <div className="min-h-0 overflow-hidden lg:contents">
+            {NAV_LINKS.map(({ href, label }) => (
               <Link
-                href="#newsletter"
-                onClick={(event) => {
-                  useActive.closeMobileMenu();
-                  const target = document.getElementById("newsletter");
-                  if (target) {
+                key={href}
+                href={href}
+                onClick={useActive.closeMobileMenu}
+                className={cn(
+                  "block py-3 text-base first:pt-7 lg:px-4 lg:py-2 first:lg:pt-2",
+                  isActivePath(href) && "lg:bg-milan",
+                )}
+              >
+                {label}
+              </Link>
+            ))}
+            <div className="mt-6 flex flex-col items-center gap-4 lg:mt-0 lg:ml-4 lg:flex-row">
+              <Button
+                asChild
+                title="Subscribe to my Newsletter"
+                variant="secondary"
+                size="sm"
+                className="w-full"
+              >
+                <Link
+                  href="#newsletter"
+                  onClick={(event) => {
                     // Scroll explicitly: clicking a link to the hash the URL
                     // already has won't re-trigger the browser's own scroll.
-                    // Instant, not smooth — a smooth animation targets a
-                    // position that shifts as below-the-fold content settles
-                    // on first load, so it stops short on the first click.
                     event.preventDefault();
-                    target.scrollIntoView();
-                    window.history.replaceState(null, "", "#newsletter");
-                  }
-                }}
-              >
-                Subscribe to my Newsletter
-              </Link>
-            </Button>
+                    if (useActive.isMobileMenuOpen) {
+                      // Wait for the menu to finish collapsing before scrolling,
+                      // otherwise the footer shifts up and the scroll lands short.
+                      scrollAfterCloseRef.current = true;
+                      useActive.closeMobileMenu();
+                    } else {
+                      scrollToNewsletter();
+                    }
+                  }}
+                >
+                  Subscribe to my Newsletter
+                </Link>
+              </Button>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

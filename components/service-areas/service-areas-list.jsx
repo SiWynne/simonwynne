@@ -44,8 +44,9 @@ export function ServiceAreasList({ regions = [] }) {
     <>
       {regions.map((region, ri) => (
         <section
-          key={region.name ?? ri}
-          className={`px-[5%] py-16 md:py-24 lg:py-28 ${region.scheme ?? "scheme-2"} badge-alt`}
+          key={region.id ?? region.name ?? ri}
+          id={region.id}
+          className={`scroll-mt-24 px-[5%] py-16 md:py-24 lg:py-28 ${region.scheme ?? "scheme-2"} badge-alt`}
         >
           <div className="container">
             {region.name && (
