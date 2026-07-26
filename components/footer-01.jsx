@@ -59,7 +59,7 @@ export function Footer1() {
     <footer className="px-[5%] py-12 md:py-18 lg:py-20 scheme-2 badge-alt alternate logo-alt">
       <div className="container">
         <div className="grid grid-cols-1 gap-x-[8vw] gap-y-12 pb-12 md:gap-y-16 md:pb-18 lg:grid-cols-[0.75fr_1fr] lg:gap-y-4 lg:pb-20">
-          <div className="flex flex-col">
+          <div id="newsletter" className="flex scroll-mt-24 flex-col">
             <a href="/" className="mb-5 md:mb-6">
               <img
                 src="/logo/simonwynne-logo-black.svg"

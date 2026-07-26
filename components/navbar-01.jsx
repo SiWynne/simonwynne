@@ -118,22 +118,14 @@ export function Navbar1() {
           <div className="mt-6 flex flex-col items-center gap-4 lg:mt-0 lg:ml-4 lg:flex-row">
             <Button
               asChild
-              title="View all articles"
+              title="Subscribe to my Newsletter"
               variant="secondary"
               size="sm"
               className="w-full"
             >
-              <Link href="/blog" onClick={useActive.closeMobileMenu}>
-                View all articles
+              <Link href="#newsletter" onClick={useActive.closeMobileMenu}>
+                Subscribe to my Newsletter
               </Link>
-            </Button>
-            <Button
-              title="Sign up"
-              size="sm"
-              className="w-full"
-              onClick={useActive.closeMobileMenu}
-            >
-              Sign up
             </Button>
           </div>
         </motion.div>
