@@ -107,7 +107,7 @@ export function Footer1() {
                   />
                   <Button
                     title="Subscribe"
-                    variant="secondary"
+                    variant="default"
                     size="sm"
                     type="submit"
                     disabled={formState.status === "sending"}

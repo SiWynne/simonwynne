@@ -19,7 +19,7 @@ export function Cta14() {
           <div className="mt-6 md:mt-8">
             <form className="mb-4 grid max-w-sm grid-cols-1 gap-y-3 sm:grid-cols-[1fr_max-content] sm:gap-4">
               <Input id="email" type="email" placeholder="Your email" />
-              <Button title="Subscribe Now">Subscribe Now</Button>
+              <Button title="Subscribe">Subscribe</Button>
             </form>
             <p className="text-tiny">
               By subscribing you agree to our Terms and Privacy Policy.
