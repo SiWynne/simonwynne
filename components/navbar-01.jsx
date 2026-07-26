@@ -112,7 +112,18 @@ export function Navbar1() {
             completion. On desktop lg:flex takes over and the grid rows are
             ignored. */}
         <div
-          onTransitionEnd={() => {
+          onTransitionEnd={(event) => {
+            // Only react to THIS element's own row-collapse finishing. Child
+            // controls (the CTA Button uses transition-all) bubble their own
+            // transitionend events up here; without this guard one of those
+            // fires the scroll early — while the menu is still collapsing — so
+            // it lands short, which is why it only worked on the first tap.
+            if (
+              event.target !== event.currentTarget ||
+              event.propertyName !== "grid-template-rows"
+            ) {
+              return;
+            }
             // scrollAfterCloseRef is only ever set right before a close, so the
             // menu has now finished collapsing and the footer has settled into
             // its final position — safe to scroll without landing short.
