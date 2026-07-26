@@ -131,8 +131,11 @@ export function Navbar1() {
                   if (target) {
                     // Scroll explicitly: clicking a link to the hash the URL
                     // already has won't re-trigger the browser's own scroll.
+                    // Instant, not smooth — a smooth animation targets a
+                    // position that shifts as below-the-fold content settles
+                    // on first load, so it stops short on the first click.
                     event.preventDefault();
-                    target.scrollIntoView({ behavior: "smooth" });
+                    target.scrollIntoView();
                     window.history.replaceState(null, "", "#newsletter");
                   }
                 }}
