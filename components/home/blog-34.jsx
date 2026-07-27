@@ -40,12 +40,12 @@ export function Blog34({
                     className="aspect-[3/2] size-full rounded-image object-cover"
                   />
                 </Link>
-                <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-                  {post.category && (
-                    <Badge variant="outline" className="mr-4 border-2">
-                      {post.category}
+                <div className="mb-3 flex w-full flex-wrap items-center justify-start gap-x-3 gap-y-2 md:mb-4">
+                  {post.categories.map((category) => (
+                    <Badge key={category} variant="outline" className="border-2">
+                      {category}
                     </Badge>
-                  )}
+                  ))}
                   <p className="inline text-small font-semibold">
                     {post.readTime} min read
                   </p>

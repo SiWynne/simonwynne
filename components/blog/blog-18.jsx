@@ -25,8 +25,10 @@ function PostCard({ post, featured = false }) {
           />
         </div>
       </Link>
-      <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-        <Badge className="mr-4">{post.category}</Badge>
+      <div className="mb-3 flex w-full flex-wrap items-center justify-start gap-x-3 gap-y-2 md:mb-4">
+        {post.categories.map((category) => (
+          <Badge key={category}>{category}</Badge>
+        ))}
         <p className="inline text-small font-semibold">
           {post.readTime} min read
         </p>
@@ -124,7 +126,9 @@ export function Blog18({ posts = [], categories = [] }) {
               className="data-[state=active]:animate-tabs"
             >
               <CategoryPosts
-                posts={posts.filter((post) => post.category === category)}
+                posts={posts.filter((post) =>
+                  post.categories.includes(category),
+                )}
               />
             </TabsContent>
           ))}
