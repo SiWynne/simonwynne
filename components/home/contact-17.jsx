@@ -15,14 +15,14 @@ export function Contact17() {
               <Mail className="size-12 text-scheme-text" />
             </div>
             <h3 className="mb-3 text-h4 font-bold lg:mb-4">Email</h3>
-            <div className="mb-5 md:mb-6">
+            <a className="font-bold underline" href="mailto:hello@simonwynne.com">
+              hello@simonwynne.com
+            </a>
+            <div className="mt-5 md:mt-6">
               <Button asChild variant="secondary" title="Get in Touch">
                 <Link href="/contact/">Get in Touch</Link>
               </Button>
             </div>
-            <a className="font-bold underline" href="mailto:hello@simonwynne.com">
-              hello@simonwynne.com
-            </a>
           </div>
           <div>
             <div className="mb-5 lg:mb-6">
