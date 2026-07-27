@@ -37,8 +37,12 @@ export default async function CaseStudyPage({ params }) {
       <section className="px-[5%] py-16 md:py-24 lg:py-28 scheme-1 btn-light badge-alt">
         <div className="container">
           <div className="w-full max-w-lg">
-            <div className="mb-3 flex w-full items-center justify-start md:mb-4">
-              <Badge className="mr-4">{study.category}</Badge>
+            <div className="mb-3 flex w-full flex-wrap items-center justify-start gap-x-3 gap-y-2 md:mb-4">
+              {study.categories.map((category) => (
+                <Badge key={category} variant="outline" className="border-2">
+                  {category}
+                </Badge>
+              ))}
             </div>
             <h1 className="mb-5 text-h1 font-bold md:mb-6">{study.title}</h1>
             <p className="text-medium">{study.excerpt}</p>

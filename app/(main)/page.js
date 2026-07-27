@@ -8,11 +8,12 @@ import { Outcomes } from "@/components/home/outcomes";
 import { Blog34 } from "@/components/home/blog-34";
 import { Event27 } from "@/components/home/event-27";
 import { Contact17 } from "@/components/home/contact-17";
-import { getAllCaseStudies, getWorkSection } from "@/lib/work";
+import { getCaseStudiesBySlugs } from "@/lib/work";
 import { getPostsBySlugs } from "@/lib/blog";
 import {
   getHero,
   getEvents,
+  getOutcomes,
   getToolkitsAndPlaybooks,
   getVideos,
   getLogoCarousel,
@@ -25,8 +26,8 @@ export default function Page() {
   const toolkits = getToolkitsAndPlaybooks();
   const videos = getVideos();
   const logoCarousel = getLogoCarousel();
-  const workSection = getWorkSection();
-  const caseStudies = getAllCaseStudies();
+  const outcomes = getOutcomes();
+  const caseStudies = getCaseStudiesBySlugs(outcomes.featured);
   const blog = getBlog();
   const blogPosts = getPostsBySlugs(blog.featured);
 
@@ -53,7 +54,11 @@ export default function Page() {
         buttonHref={toolkits.buttonHref}
         cards={toolkits.cards}
       />
-      <Outcomes heading={workSection.heading} caseStudies={caseStudies} />
+      <Outcomes
+        heading={outcomes.heading}
+        subtitle={outcomes.subtitle}
+        caseStudies={caseStudies}
+      />
       <Blog34
         heading={blog.heading}
         subtitle={blog.subtitle}

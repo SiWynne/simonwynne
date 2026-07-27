@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Call, LocationOn, Mail } from "relume-icons";
 
 export function Contact17() {
@@ -13,12 +14,12 @@ export function Contact17() {
             <div className="mb-5 lg:mb-6">
               <Mail className="size-12 text-scheme-text" />
             </div>
-            <h3 className="mb-3 text-h4 lg:mb-4">Email</h3>
-            <p className="mb-5 md:mb-6">
-              <Link className="font-bold underline" href="/contact/">
-                Get in Touch
-              </Link>
-            </p>
+            <h3 className="mb-3 text-h4 font-bold lg:mb-4">Email</h3>
+            <div className="mb-5 md:mb-6">
+              <Button asChild variant="secondary" title="Get in Touch">
+                <Link href="/contact/">Get in Touch</Link>
+              </Button>
+            </div>
             <a className="font-bold underline" href="mailto:hello@simonwynne.com">
               hello@simonwynne.com
             </a>
@@ -27,16 +28,21 @@ export function Contact17() {
             <div className="mb-5 lg:mb-6">
               <Call className="size-12 text-scheme-text" />
             </div>
-            <h3 className="mb-3 text-h4 lg:mb-4">Phone</h3>
+            <h3 className="mb-3 text-h4 font-bold lg:mb-4">Phone</h3>
             <a className="font-bold underline" href="tel:+447942344001">
               +44 (0)7942 344001
             </a>
+            <div className="mt-5 md:mt-6">
+              <Button asChild variant="secondary" title="Free Discovery Call">
+                <Link href="/book-a-discovery-call/">Free Discovery Call</Link>
+              </Button>
+            </div>
           </div>
           <div>
             <div className="mb-5 lg:mb-6">
               <LocationOn className="size-12 text-scheme-text" />
             </div>
-            <h3 className="mb-3 text-h4 lg:mb-4">Service Areas</h3>
+            <h3 className="mb-3 text-h4 font-bold lg:mb-4">Service Areas</h3>
             <ul className="flex flex-col items-start gap-2">
               <li>
                 <Link className="font-bold underline" href="/services/service-areas/#wales">
