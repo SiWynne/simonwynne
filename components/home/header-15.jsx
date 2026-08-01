@@ -13,7 +13,14 @@ export function Header15({ heading = "", subtitle = "", buttons = [] }) {
             </h1>
           </div>
           <div>
-            <p className="text-medium">{subtitle}</p>
+            <div className="flex flex-col gap-4 text-medium">
+              {subtitle
+                .split(/\n\s*\n/)
+                .filter((paragraph) => paragraph.trim())
+                .map((paragraph, index) => (
+                  <p key={index}>{paragraph.trim()}</p>
+                ))}
+            </div>
             {buttons.length > 0 && (
               <div className="mt-6 flex flex-wrap gap-4 md:mt-8">
                 {buttons.map((button, index) => (
