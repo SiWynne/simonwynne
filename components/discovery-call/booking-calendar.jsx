@@ -133,8 +133,8 @@ function buildWeeks(slotsByDate, now) {
         // Sub-label avoids losing the date when the heading says Today.
         subLabel: label === dateLabel ? null : dateLabel,
         periods: [
-          { id: "am", label: "AM", slots: am },
-          { id: "pm", label: "PM", slots: pm },
+          { id: "am", label: "Morning", slots: am },
+          { id: "pm", label: "Afternoon", slots: pm },
         ].filter((period) => period.slots.length > 0),
       };
     })
@@ -405,7 +405,7 @@ export function BookingCalendar({
                           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             {day.periods.map((period) => (
                               <div key={period.id}>
-                                <p className="mb-2 text-small font-semibold">
+                                <p className="mb-2 text-small font-bold">
                                   {period.label}
                                 </p>
                                 <ul className="grid grid-cols-1 gap-2">
@@ -422,7 +422,7 @@ export function BookingCalendar({
                                           // widths; the accessible name keeps
                                           // the spoken wording.
                                           aria-label={`${day.label}, ${slot.startLabel}${slot.endLabel ? ` to ${slot.endLabel}` : ""}`}
-                                          className={`w-full rounded-form border-2 border-neutral-darkest px-2 py-2 text-center text-small whitespace-nowrap transition-all duration-200 focus-visible:ring-2 focus-visible:ring-neutral-darkest focus-visible:ring-offset-2 focus-visible:outline-none ${
+                                          className={`w-full rounded-form border-2 border-neutral-darkest px-2 py-2 text-center text-small font-bold whitespace-nowrap transition-all duration-200 focus-visible:ring-2 focus-visible:ring-neutral-darkest focus-visible:ring-offset-2 focus-visible:outline-none ${
                                             isSelected
                                               ? "bg-neutral-darkest text-white"
                                               : "hover:bg-neutral-darkest-5"
